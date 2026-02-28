@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+
+    <h1>Welcome to Campus Marketplace</h1>
+    <h3 id="userInfo"></h3>
+
+    <button onclick="logout()">Logout</button>
+
+    <script>
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        fetch("/protected", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    localStorage.removeItem("token");
+                    window.location.href = "login.html";
+                }
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById("userInfo").innerText =
+                    "Logged in as: " + data.user.username;
+            });
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+
+    </script>
+
+</body>
+
+</html>
