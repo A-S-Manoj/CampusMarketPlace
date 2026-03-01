@@ -11,22 +11,20 @@
     <h3 id="userInfo"></h3>
 
     <button onclick="logout()">Logout</button>
-
+    <script src="js/utils/auth.js"></script>
+    <script>
+        requireAuth();
+    </script>
     <script>
 
         const token = localStorage.getItem("token");
-
-        if (!token) {
-            window.location.href = "index.html";
-        }
-
         fetch("/protected", {
             headers: {
                 "Authorization": "Bearer " + token
             }
         })
             .then(res => {
-                if (!res.ok) {
+                if (res.status === 401) {
                     localStorage.removeItem("token");
                     window.location.href = "login.html";
                 }
@@ -35,12 +33,11 @@
             .then(data => {
                 document.getElementById("userInfo").innerText =
                     "Logged in as: " + data.user.username;
+            })
+            .catch(err => {
+                console.error("Error:", err);
             });
 
-        function logout() {
-            localStorage.removeItem("token");
-            window.location.href = "login.html";
-        }
 
     </script>
 

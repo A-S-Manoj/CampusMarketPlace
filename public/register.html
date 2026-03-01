@@ -10,7 +10,8 @@
 
 <body>
     <header>
-        <div class="logo">&emsp;<img src="assets/images/logo.png" alt="CampusMarketPlace" width="75px" height="75px">
+        <div class="logo">&emsp;<a href="/"><img src="assets/images/logo.png" alt="CampusMarketPlace" width="75px"
+                    height="75px"></a>
         </div>
     </header>
     <section>
@@ -146,7 +147,10 @@
         &copy; 2026 CampusMarketPlace. All Rights Reserved.
     </footer>
     <script src="js/register.js"></script>
-
+    <script src="js/utils/auth.js"></script>
+    <script>
+        redirectIfAuthenticated();
+    </script>
 </body>
 
 </html>
