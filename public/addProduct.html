@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusMarketPlace - Add Product</title>
+    <link rel="stylesheet" href="css/addProduct.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">CampusMarketPlace</div>
+        <nav class="nav-links">
+            <a href="dashboard.html">Home</a>
+
+            <div class="dropdown">
+                <span>Categories</span>
+                <div class="dropdown-content">
+                    <a href="#">Electronics</a>
+                    <a href="#">Furniture</a>
+                    <a href="#">Books</a>
+                    <a href="#">Vehicles</a>
+                    <a href="#">Services</a>
+                </div>
+            </div>
+
+            <a href="#">Sell/Rent</a>
+            <a href="#">Chat</a>
+
+            <div class="dropdown">
+                <span>Profile</span>
+                <div class="dropdown-content">
+                    <a href="#">My Profile</a>
+                    <a href="#">My Products</a>
+                    <a href="#">Settings</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Add New Product</h1>
+
+        <form id="addProductForm">
+            <label>Title</label>
+            <input type="text" id="title" required>
+
+            <label>Description</label>
+            <textarea id="description" required></textarea>
+
+            <label>Price (₹)</label>
+            <input type="number" id="price" required>
+
+            <label>Category</label>
+            <select id="category" required>
+                <option value="electronics">Electronics</option>
+                <option value="furniture">Furniture</option>
+                <option value="books">Books</option>
+                <option value="vehicles">Vehicles</option>
+                <option value="services">Services</option>
+            </select>
+
+            <label>Type</label>
+            <select id="type" required>
+                <option value="sell">Sell</option>
+                <option value="rent">Rent</option>
+            </select>
+
+            <label>Image</label>
+            <input type="file" id="image" accept="image/*">
+
+            <button type="submit">Add Product</button>
+        </form>
+    </main>
+
+    <footer>
+        <a href="#">About</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Support</a>
+        <br><br>
+        &copy; 2026 CampusMarketPlace. All Rights Reserved.
+    </footer>
+    <script src="js/utils/auth.js"></script>
+    <script src="js/addProduct.js"></script>
+
+</body>
+
+</html>

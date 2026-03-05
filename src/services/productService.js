@@ -43,3 +43,16 @@ exports.createProduct = (productData, seller_id) => {
         );
     });
 };
+
+exports.getProductById = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM products WHERE id = ?";
+        db.query(sql, [id], (err, results) => {
+
+            if (err) return reject("Error fetching product");
+
+            resolve(results[0]);
+
+        });
+    });
+};

@@ -1,12 +1,12 @@
 require("dotenv").config();
-const db = require("./src/config/db");
+const db = require("./config/db");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const authenticateToken = require("./src/middleware/authMiddleware");
-const authRoutes = require("./src/routes/authRoutes");
-const productRoutes = require("./src/routes/productRoutes");
+const authenticateToken = require("./middleware/authMiddleware");
+const authRoutes = require("./routes/authRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 const server = http.createServer(app);
@@ -36,3 +36,5 @@ app.get("/protected", authenticateToken, (req, res) => {
 });
 
 app.use("/api/products", productRoutes);
+
+module.exports = app;
