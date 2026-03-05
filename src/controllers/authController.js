@@ -1,63 +1,43 @@
-const db = require("../config/db");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const authService = require("../services/authService");
 
-exports.register = (req, res) => {
+exports.register = async (req, res) => {
 
     const { name, username, email, password } = req.body;
 
-    bcrypt.hash(password, 10, (err, hashedPassword) => {
+    try {
 
-        if (err) {
-            return res.status(500).json({ message: "Error hashing password" });
-        }
+        const message = await authService.registerUser(
+            name,
+            username,
+            email,
+            password
+        );
 
-        const sql = "INSERT INTO users (name, username, email, password) VALUES (?,?, ?, ?)";
+        res.json({ message });
 
-        db.query(sql, [name, username, email, hashedPassword], (err, result) => {
+    } catch (error) {
 
-            if (err) {
-                console.log(err);
-                return res.status(500).json({ message: "User already exists" });
-            }
+        res.status(500).json({ message: error });
 
-            res.json({ message: "User registered successfully" });
-        });
-    });
+    }
 };
 
-
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
 
     const { username, password } = req.body;
 
-    const sql = "SELECT * FROM users WHERE username = ?";
+    try {
 
-    db.query(sql, [username], (err, results) => {
+        const token = await authService.loginUser(username, password);
 
-        if (err) {
-            return res.status(500).json({ message: "Database error" });
-        }
-
-        if (results.length === 0) {
-            return res.status(401).json({ message: "Invalid username or password" });
-        }
-
-        const user = results[0];
-
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-
-            if (!isMatch) {
-                return res.status(401).json({ message: "Invalid username or password" });
-            }
-
-            const token = jwt.sign(
-                { id: user.id, username: user.username },
-                process.env.JWT_SECRET,
-                { expiresIn: "1h" }
-            );
-
-            res.json({ message: "Login successful", token });
+        res.json({
+            message: "Login successful",
+            token
         });
-    });
+
+    } catch (error) {
+
+        res.status(401).json({ message: error });
+
+    }
 };

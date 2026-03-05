@@ -1,50 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-
-<head>
-    <title>Dashboard</title>
-</head>
-
-<body>
-
-    <h1>Welcome to Campus Marketplace</h1>
-    <h3 id="userInfo"></h3>
-
-    <button onclick="logout()">Logout</button>
-    <script src="js/utils/auth.js"></script>
-    <script>
-        requireAuth();
-    </script>
-    <script>
-
-        const token = localStorage.getItem("token");
-        fetch("/protected", {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        })
-            .then(res => {
-                if (res.status === 401) {
-                    localStorage.removeItem("token");
-                    window.location.href = "login.html";
-                }
-                return res.json();
-            })
-            .then(data => {
-                document.getElementById("userInfo").innerText =
-                    "Logged in as: " + data.user.username;
-            })
-            .catch(err => {
-                console.error("Error:", err);
-            });
-
-
-    </script>
-
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html>
 
@@ -97,8 +50,12 @@
 
         <section>
             <h2>Available Products</h2>
-            <div id="productContainer" class="product-grid"></div>
+            <div id="productContainer" class="product-grid">
+
+            </div>
+
         </section>
+
 
     </main>
 
@@ -110,8 +67,6 @@
         &copy; 2026 CampusMarketPlace. All Rights Reserved.
     </footer>
 
-    <script src="js/utils/auth.js"></script>
-    <script> requireAuth(); </script>
     <script src="js/dashboard.js"></script>
 
 </body>
