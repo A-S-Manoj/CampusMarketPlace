@@ -10,7 +10,9 @@
 
 <body>
     <header>
-        <div class="logo">CampusMarketPlace</div>
+        <div class="logo">&emsp;<a href="/"><img src="assets/images/logo.png" alt="CampusMarketPlace" width="75px"
+                    height="75px"></a>
+        </div>
         <nav class="nav-links">
             <a href="dashboard.html">Home</a>
 
@@ -41,38 +43,129 @@
     </header>
 
     <main class="container">
-        <h1>Add New Product</h1>
 
-        <form id="addProductForm">
-            <label>Title</label>
-            <input type="text" id="title" required>
+        <div class="toggle-container">
+            <button id="sellBtn" class="active">Sell</button>
+            <button id="rentBtn">Rent</button>
+        </div>
 
-            <label>Description</label>
-            <textarea id="description" required></textarea>
+        <div class="flip-container">
 
-            <label>Price (₹)</label>
-            <input type="number" id="price" required>
+            <div class="flip-card" id="flipCard">
 
-            <label>Category</label>
-            <select id="category" required>
-                <option value="electronics">Electronics</option>
-                <option value="furniture">Furniture</option>
-                <option value="books">Books</option>
-                <option value="vehicles">Vehicles</option>
-                <option value="services">Services</option>
-            </select>
 
-            <label>Type</label>
-            <select id="type" required>
-                <option value="sell">Sell</option>
-                <option value="rent">Rent</option>
-            </select>
+                <div class="front">
 
-            <label>Image</label>
-            <input type="file" id="image" accept="image/*">
+                    <div class="glass-form">
+                        <form id="sellForm">
 
-            <button type="submit">Add Product</button>
-        </form>
+                            <div class="form-layout">
+
+                                <div class="left-section">
+
+                                    <label>Title</label>
+                                    <input type="text" required>
+
+                                    <label>Price (₹)</label>
+                                    <input type="number" required>
+
+                                    <label>Category</label>
+                                    <select required>
+                                        <option value="">Select</option>
+                                        <option>Electronics</option>
+                                        <option>Furniture</option>
+                                        <option>Books</option>
+                                    </select>
+
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="right-section">
+
+                                    <label>Description</label>
+                                    <textarea required></textarea>
+
+                                    <label>Upload Image</label>
+
+                                    <div class="image-preview">
+                                        <img id="previewSell" src="assets/images/placeholder.png">
+                                    </div>
+
+                                    <input type="file" id="imageSell" accept="image/*">
+
+                                </div>
+
+                            </div>
+
+                            <div class="submit-area">
+                                <button type="submit">Sell Item</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+
+
+
+                <div class="back">
+
+                    <div class="glass-form">
+                        <form id="rentForm">
+
+                            <div class="form-layout">
+
+                                <div class="left-section">
+
+                                    <label>Title</label>
+                                    <input type="text" required>
+
+                                    <label>Rent Price (₹)</label>
+                                    <input type="number" required>
+
+                                    <label>Category</label>
+                                    <select required>
+                                        <option value="">Select</option>
+                                        <option>Electronics</option>
+                                        <option>Furniture</option>
+                                        <option>Books</option>
+                                    </select>
+
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="right-section">
+
+                                    <label>Description</label>
+                                    <textarea required></textarea>
+
+                                    <label>Upload Image</label>
+
+                                    <div class="image-preview">
+                                        <img id="previewRent" src="assets/images/placeholder.png">
+                                    </div>
+
+                                    <input type="file" id="imageRent" accept="image/*">
+
+                                </div>
+
+                            </div>
+
+                            <div class="submit-area">
+                                <button type="submit">Rent Item</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </main>
 
     <footer>
@@ -82,6 +175,7 @@
         <br><br>
         &copy; 2026 CampusMarketPlace. All Rights Reserved.
     </footer>
+
     <script src="js/utils/auth.js"></script>
     <script src="js/addProduct.js"></script>
 
