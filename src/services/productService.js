@@ -16,8 +16,29 @@ exports.getAllProducts = (filters) => {
         }
 
         if (filters.search) {
-            sql += " AND title LIKE ?";
-            params.push(`%${filters.search}%`);
+            sql += " AND (title LIKE ? OR description LIKE ?)";
+            params.push(`%${filters.search}%`, `%${filters.search}%`);
+        }
+
+        if (filters.minPrice) {
+            sql += " AND price >= ?";
+            params.push(filters.minPrice);
+        }
+
+        if (filters.maxPrice) {
+            sql += " AND price <= ?";
+            params.push(filters.maxPrice);
+        }
+
+        if (filters.type) {
+            sql += " AND type = ?";
+            params.push(filters.type);
+        }
+
+        if (filters.timeframe === "today") {
+            sql += " AND created_at >= CURDATE()";
+        } else if (filters.timeframe === "weekly") {
+            sql += " AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
         }
 
         sql += " ORDER BY id DESC";

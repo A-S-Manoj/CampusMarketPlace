@@ -83,8 +83,12 @@ async function loadConversations() {
                 displayName += ` <span style='font-size: 11px; color:#aaa'>(${conv.product_name})</span>`;
             }
 
+            const avatarHtml = conv.other_user_pic 
+                ? `<img src="http://localhost:5000${conv.other_user_pic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`
+                : conv.other_user_name.charAt(0).toUpperCase();
+
             item.innerHTML = `
-                <div class="chat-sb-avatar">${conv.other_user_name.charAt(0).toUpperCase()}</div>
+                <div class="chat-sb-avatar">${avatarHtml}</div>
                 <div class="chat-sb-info">
                     <span class="chat-sb-name">${displayName}</span>
                 </div>
@@ -93,14 +97,14 @@ async function loadConversations() {
             item.addEventListener("click", () => {
                 document.querySelectorAll(".chat-sb-item").forEach(el => el.classList.remove("active"));
                 item.classList.add("active");
-                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name);
+                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic);
             });
 
             conversationList.appendChild(item);
 
             // Load the first conversation by default
             if (index === 0) {
-                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name);
+                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic);
             }
         });
 
@@ -109,10 +113,23 @@ async function loadConversations() {
     }
 }
 
-async function loadMessages(conversationId, receiverId, receiverName) {
+async function loadMessages(conversationId, receiverId, receiverName, receiverPic) {
     currentConversationId = conversationId;
     activeReceiverId = receiverId;
     chatUserName.textContent = receiverName;
+    
+    // Update main header avatar
+    const headerAvatar = document.querySelector(".chat-main-header .chat-sb-avatar.small");
+    if (headerAvatar) {
+        if (receiverPic) {
+            headerAvatar.innerHTML = `<img src="http://localhost:5000${receiverPic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            headerAvatar.style.background = "transparent";
+        } else {
+            headerAvatar.innerHTML = receiverName.charAt(0).toUpperCase();
+            headerAvatar.style.background = "#222";
+        }
+    }
+
     chatMessages.innerHTML = ""; // Clear current messages
 
     const token = localStorage.getItem("token");

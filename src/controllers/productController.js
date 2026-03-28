@@ -5,7 +5,11 @@ exports.getAllProducts = async (req, res) => {
         const filters = {
             search: req.query.search,
             category: req.query.category,
-            excludeSellerId: req.user ? req.user.id : null 
+            excludeSellerId: req.user ? req.user.id : null,
+            minPrice: req.query.minPrice ? parseFloat(req.query.minPrice) : null,
+            maxPrice: req.query.maxPrice ? parseFloat(req.query.maxPrice) : null,
+            type: req.query.type,
+            timeframe: req.query.timeframe
         };
 
         const products = await productService.getAllProducts(filters);

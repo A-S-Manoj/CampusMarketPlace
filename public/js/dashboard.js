@@ -8,51 +8,78 @@ function openProduct(id) {
 }
 
 const searchInput = document.getElementById("searchInput");
+const filterOverlay = document.getElementById("filterOverlay");
+const filterBox = document.getElementById("filterBox");
 
-searchInput.addEventListener("input", async () => {
-
-    const query = searchInput.value;
-
-    try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-            `http://localhost:5000/api/products?search=${query}`, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            }
-        );
-
-        const products = await res.json();
-
-        displayProducts(products);
-
-    } catch (error) {
-        console.error(error);
-    }
-
+searchInput.addEventListener("input", () => {
+    filterProducts();
 });
 
-const categoryFilter = document.getElementById("categoryFilter");
+function openFilter() {
+    filterOverlay.classList.remove("hide");
+    filterBox.classList.remove("hide");
+}
 
-categoryFilter.addEventListener("change", async () => {
+function closeFilter() {
+    filterOverlay.classList.add("hide");
+    filterBox.classList.add("hide");
+}
 
-    const category = categoryFilter.value;
+function applyFilters() {
+    closeFilter();
+    filterProducts();
+}
+
+function clearFilters() {
+    // Reset all inputs inside filter box
+    document.getElementById("fCategory").value = "";
+    document.getElementById("fMinPrice").value = "";
+    document.getElementById("fMaxPrice").value = "";
+    
+    const typeRadios = document.getElementsByName("fType");
+    typeRadios[0].checked = true; // All
+
+    const timeRadios = document.getElementsByName("fTime");
+    timeRadios[0].checked = true; // Any time
+
+    closeFilter();
+    filterProducts();
+}
+
+async function filterProducts() {
+    const search = searchInput.value;
+    const category = document.getElementById("fCategory").value;
+    const minPrice = document.getElementById("fMinPrice").value;
+    const maxPrice = document.getElementById("fMaxPrice").value;
+    
+    let type = "";
+    const typeRadios = document.getElementsByName("fType");
+    typeRadios.forEach(r => { if(r.checked) type = r.value; });
+
+    let timeframe = "";
+    const timeRadios = document.getElementsByName("fTime");
+    timeRadios.forEach(r => { if(r.checked) timeframe = r.value; });
+
     const token = localStorage.getItem("token");
 
-    const res = await fetch(
-        `http://localhost:5000/api/products?category=${category}`, {
+    try {
+        let url = `/api/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&type=${type}&timeframe=${timeframe}`;
+        
+        const res = await fetch(url, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
-        }
-    );
+        });
 
-    const products = await res.json();
+        if (!res.ok) throw new Error("Filter failed");
 
-    displayProducts(products);
+        const products = await res.json();
+        displayProducts(products);
 
-});
+    } catch (error) {
+        console.error("Error filtering products:", error);
+    }
+}
 
 function contactSeller(sellerId, productId, event) {
     if (event) event.stopPropagation();

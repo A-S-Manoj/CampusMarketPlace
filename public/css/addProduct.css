@@ -62,6 +62,26 @@ footer a {
     text-decoration: none;
 }
 
+.logout-btn {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    background: #ef4444;
+    color: white !important;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}
+
 
 .dropdown {
     position: relative;

@@ -59,6 +59,26 @@ footer a {
     text-decoration: none;
 }
 
+.logout-btn {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    background: #ef4444;
+    color: white !important;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}
+
 .dropdown {
     position: relative;
     cursor: pointer;
@@ -107,25 +127,213 @@ footer a {
 .search-section {
     padding: 20px;
     display: flex;
-    gap: 15px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+@media (max-width: 650px) {
+    .search-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 800px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: #888;
+    pointer-events: none;
 }
 
 .search-section input {
-    padding: 10px;
-    border-radius: 10px;
+    width: 100%;
+    padding: 14px 20px 14px 45px;
+    border-radius: 12px;
     border: 1px solid #333;
-    min-width: 60%;
-    background-color: #222;
+    background-color: #111;
     color: #fff;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-.search-section select {
-    min-width: 20%;
-    padding: 10px;
-    border-radius: 10px;
+.search-section input:focus {
+    outline: none;
+    border-color: #03a9f4;
+    box-shadow: 0 0 20px rgba(3, 169, 244, 0.3);
+    background-color: #0c0c0c;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    border-radius: 12px;
     border: 1px solid #333;
-    background-color: #222;
+    background-color: #111;
     color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.filter-btn:hover {
+    border-color: #f441a5;
+    background-color: #1a1a1a;
+}
+
+.filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 1001;
+    transition: 0.3s ease;
+}
+
+.filter-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 450px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 20px;
+    z-index: 1002;
+    padding: 25px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    transition: 0.3s ease;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 15px;
+}
+
+.filter-header h3 {
+    margin: 0;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.close-filter {
+    font-size: 28px;
+    cursor: pointer;
+    color: #888;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #aaa;
+    font-weight: 600;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    background: #222;
+    border: 1px solid #333;
+    color: white;
+}
+
+.type-toggle,
+.time-options {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.type-toggle label,
+.time-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #222;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid #333;
+    color: white;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-inputs input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    background: #222;
+    border: 1px solid #333;
+    color: white;
+}
+
+.filter-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.btn-apply {
+    flex: 2;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-clear {
+    flex: 1;
+    background: #222;
+    color: #888;
+    border: 1px solid #333;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.hide {
+    display: none !important;
 }
 
 .product-grid {
