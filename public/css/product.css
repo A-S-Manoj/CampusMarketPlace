@@ -1,0 +1,133 @@
+.product-container {
+    max-width: 1200px;
+    margin: 90px auto 40px;
+    padding: 20px;
+}
+
+.loading-state, .error-state {
+    text-align: center;
+    font-size: 20px;
+    padding: 50px;
+    background: #000;
+    border-radius: 15px;
+}
+
+.error-state {
+    color: #ef4444;
+}
+
+.product-detail-wrapper {
+    display: flex;
+    gap: 40px;
+    background: #000;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.product-image-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.product-image-section img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.product-info-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.pd-category {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #03a9f4;
+    margin-bottom: 10px;
+}
+
+.pd-title {
+    font-size: 32px;
+    margin: 0 0 15px;
+    color: #fff;
+}
+
+.pd-price {
+    font-size: 28px;
+    font-weight: bold;
+    color: #22c55e;
+    margin-bottom: 15px;
+}
+
+.pd-type-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #fff;
+    margin-bottom: 25px;
+    width: fit-content;
+}
+
+.pd-description {
+    line-height: 1.6;
+    color: #aaa;
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+}
+
+.section-divider {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 20px 0;
+}
+
+.seller-box {
+    margin-top: 10px;
+}
+
+.seller-box h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.btn-contact-large {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    font-size: 16px;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-contact-large:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.hide {
+    display: none !important;
+}
+
+@media (max-width: 800px) {
+    .product-detail-wrapper {
+        flex-direction: column;
+    }
+}
