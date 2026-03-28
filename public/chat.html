@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusMarketplace - Chat</title>
+
+    <link rel="stylesheet" href="css/chat.css">
+
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">&emsp;
+            <a href="/"><img src="assets/images/logo.png" width="75" height="75"></a>
+        </div>
+
+        <nav class="nav-links">
+            <a href="dashboard.html">Home</a>
+
+            <div class="dropdown">
+                <span>Categories</span>
+                <div class="dropdown-content">
+                    <a href="#">Electronics</a>
+                    <a href="#">Furniture</a>
+                    <a href="#">Books</a>
+                    <a href="#">Vehicles</a>
+                    <a href="#">Services</a>
+                </div>
+            </div>
+
+            <a href="addProduct.html">Sell/Rent</a>
+            <a href="chat.html">Chat</a>
+
+            <div class="dropdown">
+                <span>Profile</span>
+                <div class="dropdown-content">
+                    <a href="#">My Profile</a>
+                    <a href="#">My Products</a>
+                    <a href="#">Settings</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="chat-container">
+
+        <div class="chat-layout">
+
+
+            <div class="chat-sidebar">
+
+                <div class="chat-sb-header">
+                    <h2>Messages</h2>
+                </div>
+
+                <div class="chat-sb-list" id="conversationList">
+
+
+                    <div class="chat-sb-item active">
+                        <div class="chat-sb-avatar">U</div>
+                        <div class="chat-sb-info">
+                            <span class="chat-sb-name">User 1</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-sb-item">
+                        <div class="chat-sb-avatar">U</div>
+                        <div class="chat-sb-info">
+                            <span class="chat-sb-name">User 2</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="chat-main">
+
+                <div class="chat-main-header">
+
+                    <div class="chat-mh-user">
+
+                        <div class="chat-sb-avatar small">U</div>
+
+                        <h3 id="chatUserName">User 1</h3>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="chat-messages" id="chatMessages">
+
+                    <div class="chat-bubble-wrap them">
+                        <div class="chat-bubble">
+                            <p>Hello</p>
+                            <span class="chat-time">10:30</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-bubble-wrap me">
+                        <div class="chat-bubble">
+                            <p>Hi there!</p>
+                            <span class="chat-time">10:31</span>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <form class="chat-input-area" id="chatForm">
+
+                    <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input">
+
+                    <button type="submit" class="chat-send-btn">
+                        ➤
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+        <a href="#">About</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Support</a>
+
+        <br><br>
+
+        © 2026 CampusMarketPlace. All Rights Reserved.
+
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/chat.js"></script>
+
+</body>
+
+</html>
