@@ -40,8 +40,19 @@ function renderProduct(product) {
     document.getElementById("productDetail").classList.remove("hide");
 
     // Image
-    const imageUrl = product.image_url ? `${product.image_url}` : "https://via.placeholder.com/600";
-    document.getElementById("pdImage").src = imageUrl;
+    const imageSection = document.querySelector(".product-image-section");
+    if (product.image_url) {
+        imageSection.innerHTML = `<img id="pdImage" src="${product.image_url}" alt="${product.title}">`;
+    } else {
+        imageSection.innerHTML = `<div class="no-image-placeholder h-full">
+                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                   <circle cx="8.5" cy="8.5" r="1.5"/>
+                   <polyline points="21 15 16 10 5 21"/>
+                 </svg>
+                 <span>No Image Available</span>
+               </div>`;
+    }
 
     // Info
     document.getElementById("pdCategory").innerText = product.category || "";

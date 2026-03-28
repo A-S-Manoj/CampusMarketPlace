@@ -33,9 +33,7 @@ function displayProfile(profile) {
     document.getElementById("profileYear").innerText = profile.year_of_study || "Not provided";
     document.getElementById("profileCourse").innerText = profile.course || "Not provided";
 
-    if (profile.profile_pic) {
-        document.getElementById("profilePicImg").src = `${profile.profile_pic}`;
-    }
+    document.getElementById("profilePicImg").src = profile.profile_pic || "/assets/images/NoPfp.jpg";
 
     // Populate edit form fields
     document.getElementById("editMobile").value = profile.mobile_number || "";
@@ -120,7 +118,17 @@ function displayMyProducts(products) {
 
     let html = "";
     products.forEach(product => {
-        const imageUrl = product.image_url ? `${product.image_url}` : "https://via.placeholder.com/300";
+        const imageHtml = product.image_url 
+            ? `<img src="${product.image_url}" alt="${product.title}">`
+            : `<div class="no-image-placeholder">
+                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                   <circle cx="8.5" cy="8.5" r="1.5"/>
+                   <polyline points="21 15 16 10 5 21"/>
+                 </svg>
+                 <span>No Image Available</span>
+               </div>`;
+
         const statusText = product.status === "available" ? "In Stock" : "Not Available";
 
         // Create product card but modify the bottom section for Edit / Delete instead of Contact
@@ -128,7 +136,7 @@ function displayMyProducts(products) {
             <div class="card">
                 <div class="tilt" onclick="openProduct(${product.id})" style="cursor:pointer">
                     <div class="img">
-                        <img src="${imageUrl}" alt="${product.title}">
+                        ${imageHtml}
                     </div>
                 </div>
 
@@ -162,7 +170,7 @@ async function handleDeleteProduct(id) {
 
     try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+        const res = await fetch(`/api/products/${id}`, {
             method: "DELETE",
             headers: { "Authorization": `Bearer ${token}` }
         });
@@ -211,7 +219,7 @@ async function handleProductUpdate(e) {
     }
 
     try {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+        const res = await fetch(`/api/products/${id}`, {
             method: "PUT",
             headers: { "Authorization": `Bearer ${token}` },
             body: formData

@@ -120,10 +120,16 @@ function displayProducts(products) {
     let html = "";
 
     products.forEach(product => {
-
-        const imageUrl = product.image_url
-            ? `${product.image_url}`
-            : "https://via.placeholder.com/300";
+        const imageHtml = product.image_url 
+            ? `<img src="${product.image_url}" alt="${product.title}">`
+            : `<div class="no-image-placeholder">
+                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                   <circle cx="8.5" cy="8.5" r="1.5"/>
+                   <polyline points="21 15 16 10 5 21"/>
+                 </svg>
+                 <span>No Image Available</span>
+               </div>`;
 
         const statusText = product.status === "available"
             ? "In Stock"
@@ -133,7 +139,7 @@ function displayProducts(products) {
             <div class="card" onclick="openProduct(${product.id})">
                 <div class="tilt">
                     <div class="img">
-                        <img src="${imageUrl}" alt="${product.title}">
+                        ${imageHtml}
                     </div>
                 </div>
 

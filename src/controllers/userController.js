@@ -15,9 +15,9 @@ exports.updateProfile = async (req, res) => {
         const userId = req.user.id;
         const profileData = { ...req.body };
 
-        // If an image was uploaded, store the path
+        // If an image was uploaded, store the path (Cloudinary URL in prod, local path in dev)
         if (req.file) {
-            profileData.profile_pic = `/uploads/${req.file.filename}`;
+            profileData.profile_pic = req.file.path || `/uploads/${req.file.filename}`;
         }
 
         const message = await userService.updateUserProfile(userId, profileData);

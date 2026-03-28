@@ -22,22 +22,22 @@ lendBtn.addEventListener("click", () => {
 });
 
 const imageSell = document.getElementById("imageSell");
-const previewSell = document.getElementById("previewSell");
+const previewSellContainer = document.getElementById("previewSellContainer");
 
 imageSell.addEventListener("change", () => {
     const file = imageSell.files[0];
     if (file) {
-        previewSell.src = URL.createObjectURL(file);
+        previewSellContainer.innerHTML = `<img id="previewSell" src="${URL.createObjectURL(file)}">`;
     }
 });
 
 const imageLend = document.getElementById("imageLend");
-const previewLend = document.getElementById("previewLend");
+const previewLendContainer = document.getElementById("previewLendContainer");
 
 imageLend.addEventListener("change", () => {
     const file = imageLend.files[0];
     if (file) {
-        previewLend.src = URL.createObjectURL(file);
+        previewLendContainer.innerHTML = `<img id="previewLend" src="${URL.createObjectURL(file)}">`;
     }
 });
 

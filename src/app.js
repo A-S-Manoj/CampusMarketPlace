@@ -1,4 +1,3 @@
-require("dotenv").config();
 const db = require("./config/db");
 const bcrypt = require("bcrypt");
 const express = require("express");

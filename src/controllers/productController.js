@@ -45,7 +45,8 @@ exports.createProduct = async (req, res) => {
         const productData = { ...req.body };
 
         if (req.file) {
-            productData.image_url = `/uploads/${req.file.filename}`;
+            // Cloudinary gives full URL in req.file.path; local multer uses filename
+            productData.image_url = req.file.path || `/uploads/${req.file.filename}`;
         } else {
             productData.image_url = null;
         }
@@ -65,7 +66,7 @@ exports.updateProduct = async (req, res) => {
         const productData = { ...req.body };
 
         if (req.file) {
-            productData.image_url = `/uploads/${req.file.filename}`;
+            productData.image_url = req.file.path || `/uploads/${req.file.filename}`;
         }
 
         const message = await productService.updateProduct(id, productData, seller_id);

@@ -83,9 +83,8 @@ async function loadConversations() {
                 displayName += ` <span style='font-size: 11px; color:#aaa'>(${conv.product_name})</span>`;
             }
 
-            const avatarHtml = conv.other_user_pic 
-                ? `<img src="${conv.other_user_pic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`
-                : conv.other_user_name.charAt(0).toUpperCase();
+            const avatarSrc = conv.other_user_pic || "/assets/images/NoPfp.jpg";
+            const avatarHtml = `<img src="${avatarSrc}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
 
             item.innerHTML = `
                 <div class="chat-sb-avatar">${avatarHtml}</div>
@@ -121,13 +120,9 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
     // Update main header avatar
     const headerAvatar = document.querySelector(".chat-main-header .chat-sb-avatar.small");
     if (headerAvatar) {
-        if (receiverPic) {
-            headerAvatar.innerHTML = `<img src="${receiverPic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-            headerAvatar.style.background = "transparent";
-        } else {
-            headerAvatar.innerHTML = receiverName.charAt(0).toUpperCase();
-            headerAvatar.style.background = "#222";
-        }
+        const picToUse = receiverPic || "/assets/images/NoPfp.jpg";
+        headerAvatar.innerHTML = `<img src="${picToUse}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+        headerAvatar.style.background = "transparent";
     }
 
     chatMessages.innerHTML = ""; // Clear current messages
