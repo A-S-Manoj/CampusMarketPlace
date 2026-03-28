@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CampusMarketPlace - My Profile</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">&emsp;<a href="/"><img src="assets/images/logo.png" alt="CampusMarketPlace" width="75px" height="75px"></a></div>
+
+        <nav class="nav-links">
+            <a href="dashboard.html">Home</a>
+            <a href="addProduct.html">Sell/Rent</a>
+            <a href="chat.html">Chat</a>
+            <div class="dropdown">
+                <span>Profile</span>
+                <div class="dropdown-content">
+                    <a href="profile.html">My Profile</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <section class="profile-section">
+            <div class="profile-header">
+                <div class="profile-pic-wrapper">
+                    <img id="profilePicImg" src="https://via.placeholder.com/150" alt="Profile Picture">
+                </div>
+                <!-- Read Mode -->
+                <div id="profileReadMode" class="profile-info">
+                    <h2 id="profileName">Loading Name...</h2>
+                    <p class="profile-username">@<span id="profileUsername">loading</span></p>
+                    <div class="profile-details-grid">
+                        <div class="detail-item"><strong>Email:</strong> <span id="profileEmail"></span></div>
+                        <div class="detail-item"><strong>Mobile:</strong> <span id="profileMobile"></span></div>
+                        <div class="detail-item"><strong>Student Type:</strong> <span id="profileType"></span></div>
+                        <div class="detail-item"><strong>Hostel:</strong> <span id="profileHostel"></span></div>
+                        <div class="detail-item"><strong>Year:</strong> <span id="profileYear"></span></div>
+                        <div class="detail-item"><strong>Course:</strong> <span id="profileCourse"></span></div>
+                    </div>
+                    <button class="btn btn-edit-profile" onclick="toggleEditMode()">✏️ Edit Profile</button>
+                </div>
+                <!-- Edit Mode -->
+                <form id="profileEditForm" class="profile-form hide" onsubmit="handleProfileUpdate(event)">
+                    <div class="form-group">
+                        <label>Profile Picture</label>
+                        <input type="file" id="editProfilePic" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="text" id="editMobile">
+                    </div>
+                    <div class="form-group">
+                        <label>Student Type</label>
+                        <select id="editType">
+                            <option value="">Select</option>
+                            <option value="Hosteller">Hosteller</option>
+                            <option value="Day Scholar">Day Scholar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Hostel Details</label>
+                        <input type="text" id="editHostel">
+                    </div>
+                    <div class="form-group">
+                        <label>Year of Study</label>
+                        <input type="text" id="editYear">
+                    </div>
+                    <div class="form-group">
+                        <label>Course</label>
+                        <input type="text" id="editCourse">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-save">Save Changes</button>
+                        <button type="button" class="btn btn-cancel" onclick="toggleEditMode()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="my-products-section">
+            <br>
+            <h2>My Products</h2>
+            <div id="myProductContainer" class="product-grid">
+                <!-- Products dynamically loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for editing a product -->
+    <div id="editProductModal" class="modal hide">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Product</h2>
+            <form id="editProductForm" onsubmit="handleProductUpdate(event)">
+                <input type="hidden" id="editProductId">
+                <input type="text" id="editPTitle" required placeholder="Title">
+                <textarea id="editPDesc" required placeholder="Description"></textarea>
+                <input type="number" id="editPPrice" required placeholder="Price">
+                <input type="text" id="editPCat" required placeholder="Category">
+                <input type="text" id="editPType" required placeholder="Type (e.g., Sell/Rent)">
+                <input type="file" id="editPImage" accept="image/*">
+                <br><br>
+                <button type="submit" class="btn btn-save" style="width: 100%; justify-content: center;">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <a href="#">About</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Support</a>
+        <br><br>
+        &copy; 2026 CampusMarketPlace. All Rights Reserved.
+    </footer>
+    <script src="js/utils/auth.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

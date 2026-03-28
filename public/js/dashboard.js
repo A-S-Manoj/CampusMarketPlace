@@ -14,9 +14,13 @@ searchInput.addEventListener("input", async () => {
     const query = searchInput.value;
 
     try {
-
+        const token = localStorage.getItem("token");
         const res = await fetch(
-            `http://localhost:5000/api/products?search=${query}`
+            `http://localhost:5000/api/products?search=${query}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
         );
 
         const products = await res.json();
@@ -34,9 +38,14 @@ const categoryFilter = document.getElementById("categoryFilter");
 categoryFilter.addEventListener("change", async () => {
 
     const category = categoryFilter.value;
+    const token = localStorage.getItem("token");
 
     const res = await fetch(
-        `http://localhost:5000/api/products?category=${category}`
+        `http://localhost:5000/api/products?category=${category}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
     );
 
     const products = await res.json();

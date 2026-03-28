@@ -6,6 +6,7 @@ const authenticateToken = require("./middleware/authMiddleware");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.get("/protected", authenticateToken, (req, res) => {
 
 app.use("/api/products", productRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/users", userRoutes);
 
 module.exports = app;

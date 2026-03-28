@@ -1,0 +1,146 @@
+.profile-container {
+    max-width: 1200px;
+    margin: 90px auto 0;
+    padding: 20px;
+}
+
+.profile-section {
+    background: #000;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    margin-bottom: 40px;
+}
+
+.profile-header {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.profile-pic-wrapper img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f441a5;
+    background: #222;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-username {
+    color: #929292;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.profile-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.detail-item {
+    background: #111;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.detail-item strong {
+    color: #03a9f4;
+}
+
+.profile-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.profile-form input, .profile-form select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #333;
+    background: #222;
+    color: white;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-edit-profile {
+    width: auto;
+    display: inline-block;
+}
+
+.btn-save {
+    background: #22c55e;
+}
+.btn-save:hover { background: #16a34a; }
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid #71717a;
+}
+
+.btn-delete {
+    background: #ef4444; border:none;
+}
+.btn-delete:hover { background: #dc2626; }
+
+.hide {
+    display: none !important;
+}
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000;
+}
+.modal.hide { display: none; }
+.modal-content {
+    background: #000;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid #333;
+    color: white;
+    position: relative;
+}
+.modal-content h2 { margin-top: 0; }
+.close {
+    position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #aaa; background: none; border: none; padding: 0;
+}
+.close:hover { color: #fff }
+#editProductForm {
+    display: flex; flex-direction: column; gap: 10px; margin-top: 20px;
+}
+#editProductForm input, #editProductForm textarea {
+    padding: 10px; border-radius: 5px; border: 1px solid #333; background: #222; color: #fff;
+}
+.my-product-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.my-product-actions .btn {
+    flex: 1;
+    justify-content: center;
+}
