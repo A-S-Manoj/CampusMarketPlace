@@ -22,17 +22,17 @@ exports.createProduct = (productData, seller_id) => {
 
     return new Promise((resolve, reject) => {
 
-        const { title, description, price, category, type } = productData;
+        const { title, description, price, category, type, image_url } = productData;
 
         const sql = `
         INSERT INTO products
-        (title, description, price, category, type, seller_id)
-        VALUES (?, ?, ?, ?, ?, ?)
+        (title, description, price, category, type, image_url, seller_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
         db.query(
             sql,
-            [title, description, price, category, type, seller_id],
+            [title, description, price, category, type, image_url, seller_id],
             (err, result) => {
 
                 if (err) return reject("Error creating product");

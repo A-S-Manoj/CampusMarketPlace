@@ -38,9 +38,17 @@ exports.createProduct = async (req, res) => {
     try {
 
         const seller_id = req.user.id;
+        const productData = { ...req.body };
+
+        // If an image was uploaded, store the path
+        if (req.file) {
+            productData.image_url = `/uploads/${req.file.filename}`;
+        } else {
+            productData.image_url = null;
+        }
 
         const productId = await productService.createProduct(
-            req.body,
+            productData,
             seller_id
         );
 

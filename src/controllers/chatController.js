@@ -2,12 +2,18 @@ const db = require("../config/db");
 
 // Start or get an existing conversation
 exports.startConversation = async (req, res) => {
-    const { userId2, productId } = req.body;
+    let { userId2, productId } = req.body;
     const userId1 = req.user.id; // From authenticateToken middleware
 
     if (!userId2) {
         return res.status(400).json({ error: "Missing required fields: userId2 is required." });
     }
+
+    // Sanitize productId
+    if (productId === "undefined" || productId === "null") {
+        productId = null;
+    }
+
 
     // Prevent user from chatting with themselves
     if (userId1 === parseInt(userId2)) {
@@ -60,7 +66,7 @@ exports.getUserConversations = async (req, res) => {
         const query = `
             SELECT c.id AS conversation_id, c.created_at,
                    u.id AS other_user_id, u.username AS other_user_name,
-                   p.id AS product_id, p.name AS product_name
+                   p.id AS product_id, p.title AS product_name
             FROM conversations c
             JOIN users u ON (u.id = IF(c.user1_id = ?, c.user2_id, c.user1_id))
             LEFT JOIN products p ON c.product_id = p.id

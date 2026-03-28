@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <a href="#">Sell/Rent</a>
+            <a href="#">Sell/Lend</a>
             <a href="#">Chat</a>
 
             <div class="dropdown">
@@ -46,7 +46,7 @@
 
         <div class="toggle-container">
             <button id="sellBtn" class="active">Sell</button>
-            <button id="rentBtn">Rent</button>
+            <button id="lendBtn">Lend</button>
         </div>
 
         <div class="flip-container">
@@ -64,13 +64,13 @@
                                 <div class="left-section">
 
                                     <label>Title</label>
-                                    <input type="text" required>
+                                    <input type="text" id="sellTitle" required>
 
                                     <label>Price (₹)</label>
-                                    <input type="number" required>
+                                    <input type="number" id="sellPrice" required>
 
                                     <label>Category</label>
-                                    <select required>
+                                    <select id="sellCategory" required>
                                         <option value="">Select</option>
                                         <option>Electronics</option>
                                         <option>Furniture</option>
@@ -84,7 +84,7 @@
                                 <div class="right-section">
 
                                     <label>Description</label>
-                                    <textarea required></textarea>
+                                    <textarea id="sellDescription" required></textarea>
 
                                     <label>Upload Image</label>
 
@@ -112,20 +112,20 @@
                 <div class="back">
 
                     <div class="glass-form">
-                        <form id="rentForm">
+                        <form id="lendForm">
 
                             <div class="form-layout">
 
                                 <div class="left-section">
 
                                     <label>Title</label>
-                                    <input type="text" required>
+                                    <input type="text" id="lendTitle" required>
 
-                                    <label>Rent Price (₹)</label>
-                                    <input type="number" required>
+                                    <label>Lend Price (₹)</label>
+                                    <input type="number" id="lendPrice" required>
 
                                     <label>Category</label>
-                                    <select required>
+                                    <select id="lendCategory" required>
                                         <option value="">Select</option>
                                         <option>Electronics</option>
                                         <option>Furniture</option>
@@ -139,22 +139,22 @@
                                 <div class="right-section">
 
                                     <label>Description</label>
-                                    <textarea required></textarea>
+                                    <textarea id="lendDescription" required></textarea>
 
                                     <label>Upload Image</label>
 
                                     <div class="image-preview">
-                                        <img id="previewRent" src="assets/images/placeholder.png">
+                                        <img id="previewLend" src="assets/images/placeholder.png">
                                     </div>
 
-                                    <input type="file" id="imageRent" accept="image/*">
+                                    <input type="file" id="imageLend" accept="image/*">
 
                                 </div>
 
                             </div>
 
                             <div class="submit-area">
-                                <button type="submit">Rent Item</button>
+                                <button type="submit">Lend Item</button>
                             </div>
 
                         </form>
