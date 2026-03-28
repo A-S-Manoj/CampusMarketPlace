@@ -17,10 +17,12 @@ document.getElementById("loginForm").addEventListener("submit", async function (
 
     if (response.ok) {
         localStorage.setItem("token", data.token);
-        alert("Login successful!");
-        window.location.href = "dashboard.html";
+        showToast("Login successful!", "success");
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 1000);
     } else {
-        alert(data.message);
+        showToast(data.message || "Login failed", "error");
     }
 
 });

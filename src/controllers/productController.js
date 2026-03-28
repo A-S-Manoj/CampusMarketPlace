@@ -53,7 +53,8 @@ exports.createProduct = async (req, res) => {
         const productId = await productService.createProduct(productData, seller_id);
         res.status(201).json({ message: "Product created", id: productId });
     } catch (error) {
-        res.status(500).json({ message: error });
+        console.error("Error in createProduct:", error);
+        res.status(500).json({ message: error.message || error });
     }
 };
 

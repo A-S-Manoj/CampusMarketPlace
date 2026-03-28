@@ -90,7 +90,7 @@ async function fetchProducts() {
     try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:5000/api/products", {
+        const response = await fetch("/api/products", {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -122,7 +122,7 @@ function displayProducts(products) {
     products.forEach(product => {
 
         const imageUrl = product.image_url
-            ? `http://localhost:5000${product.image_url}`
+            ? `${product.image_url}`
             : "https://via.placeholder.com/300";
 
         const statusText = product.status === "available"

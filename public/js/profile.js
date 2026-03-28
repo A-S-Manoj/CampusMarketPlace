@@ -9,7 +9,7 @@ let currentProfile = {};
 async function loadProfile() {
     try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/users/profile", {
+        const res = await fetch("/api/users/profile", {
             headers: { "Authorization": `Bearer ${token}` }
         });
         
@@ -34,7 +34,7 @@ function displayProfile(profile) {
     document.getElementById("profileCourse").innerText = profile.course || "Not provided";
 
     if (profile.profile_pic) {
-        document.getElementById("profilePicImg").src = `http://localhost:5000${profile.profile_pic}`;
+        document.getElementById("profilePicImg").src = `${profile.profile_pic}`;
     }
 
     // Populate edit form fields
@@ -75,18 +75,18 @@ async function handleProfileUpdate(e) {
     }
 
     try {
-        const res = await fetch("http://localhost:5000/api/users/profile", {
+        const res = await fetch("/api/users/profile", {
             method: "PUT",
             headers: { "Authorization": `Bearer ${token}` },
             body: formData
         });
 
         if (res.ok) {
-            alert("Profile updated successfully!");
+            showToast("Profile updated successfully!", "success");
             toggleEditMode();
             loadProfile(); // Reload profile
         } else {
-            alert("Failed to update profile.");
+            showToast("Failed to update profile.", "error");
         }
     } catch (err) {
         console.error(err);
@@ -96,7 +96,7 @@ async function handleProfileUpdate(e) {
 async function loadMyProducts() {
     try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:5000/api/products/my-products", {
+        const response = await fetch("/api/products/my-products", {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -120,7 +120,7 @@ function displayMyProducts(products) {
 
     let html = "";
     products.forEach(product => {
-        const imageUrl = product.image_url ? `http://localhost:5000${product.image_url}` : "https://via.placeholder.com/300";
+        const imageUrl = product.image_url ? `${product.image_url}` : "https://via.placeholder.com/300";
         const statusText = product.status === "available" ? "In Stock" : "Not Available";
 
         // Create product card but modify the bottom section for Edit / Delete instead of Contact
@@ -168,9 +168,10 @@ async function handleDeleteProduct(id) {
         });
 
         if (res.ok) {
+            showToast("Product deleted successfully!", "success");
             loadMyProducts();
         } else {
-            alert("Failed to delete product.");
+            showToast("Failed to delete product.", "error");
         }
     } catch (err) {
         console.error(err);
@@ -217,10 +218,11 @@ async function handleProductUpdate(e) {
         });
 
         if (res.ok) {
+            showToast("Product updated successfully!", "success");
             closeEditModal();
             loadMyProducts();
         } else {
-            alert("Failed to update product.");
+            showToast("Failed to update product.", "error");
         }
     } catch (err) {
         console.error(err);

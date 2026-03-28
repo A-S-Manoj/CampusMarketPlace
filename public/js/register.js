@@ -16,6 +16,13 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     });
 
     const data = await response.json();
-    alert(data.message);
+    if (response.ok) {
+        showToast("Registration successful!", "success");
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1500);
+    } else {
+        showToast(data.message || "Registration failed", "error");
+    }
 
 });

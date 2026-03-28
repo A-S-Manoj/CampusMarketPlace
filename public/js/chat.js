@@ -84,7 +84,7 @@ async function loadConversations() {
             }
 
             const avatarHtml = conv.other_user_pic 
-                ? `<img src="http://localhost:5000${conv.other_user_pic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`
+                ? `<img src="${conv.other_user_pic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`
                 : conv.other_user_name.charAt(0).toUpperCase();
 
             item.innerHTML = `
@@ -122,7 +122,7 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
     const headerAvatar = document.querySelector(".chat-main-header .chat-sb-avatar.small");
     if (headerAvatar) {
         if (receiverPic) {
-            headerAvatar.innerHTML = `<img src="http://localhost:5000${receiverPic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            headerAvatar.innerHTML = `<img src="${receiverPic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
             headerAvatar.style.background = "transparent";
         } else {
             headerAvatar.innerHTML = receiverName.charAt(0).toUpperCase();

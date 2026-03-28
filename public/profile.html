@@ -5,6 +5,7 @@
     <title>CampusMarketPlace - My Profile</title>
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/notifications.css">
 </head>
 
 <body>
@@ -14,7 +15,7 @@
 
         <nav class="nav-links">
             <a href="dashboard.html">Home</a>
-            <a href="addProduct.html">Sell/Rent</a>
+            <a href="addProduct.html">Sell/Lend</a>
             <a href="chat.html">Chat</a>
             <a href="profile.html">Profile</a>
             <button class="logout-btn" onclick="logout()" title="Logout">
@@ -100,8 +101,22 @@
                 <input type="text" id="editPTitle" required placeholder="Title">
                 <textarea id="editPDesc" required placeholder="Description"></textarea>
                 <input type="number" id="editPPrice" required placeholder="Price">
-                <input type="text" id="editPCat" required placeholder="Category">
-                <input type="text" id="editPType" required placeholder="Type (e.g., Sell/Rent)">
+                <select id="editPCat" required>
+                    <option value="">Select Category</option>
+                    <option>Electronics</option>
+                    <option>Books & Study Material</option>
+                    <option>Furniture & Decor</option>
+                    <option>Clothing & Fashion</option>
+                    <option>Vehicles (Bicycles/Scooters)</option>
+                    <option>Home & Kitchen</option>
+                    <option>Sports & Fitness</option>
+                    <option>Services (Tuition/Projects)</option>
+                    <option>Others</option>
+                </select>
+                <select id="editPType" required>
+                    <option value="sell">Sell</option>
+                    <option value="lend">Lend</option>
+                </select>
                 <input type="file" id="editPImage" accept="image/*">
                 <br><br>
                 <button type="submit" class="btn btn-save" style="width: 100%; justify-content: center;">Save Product</button>
@@ -117,6 +132,7 @@
         &copy; 2026 CampusMarketPlace. All Rights Reserved.
     </footer>
     <script src="js/utils/auth.js"></script>
+    <script src="js/utils/notifications.js"></script>
     <script src="js/profile.js"></script>
 </body>
 </html>

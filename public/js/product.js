@@ -13,7 +13,7 @@ async function loadProductDetails() {
     }
 
     try {
-        const response = await fetch(`http://localhost:5000/api/products/${productId}`);
+        const response = await fetch(`/api/products/${productId}`);
         
         if (!response.ok) {
             throw new Error("Failed to fetch product details");
@@ -40,7 +40,7 @@ function renderProduct(product) {
     document.getElementById("productDetail").classList.remove("hide");
 
     // Image
-    const imageUrl = product.image_url ? `http://localhost:5000${product.image_url}` : "https://via.placeholder.com/600";
+    const imageUrl = product.image_url ? `${product.image_url}` : "https://via.placeholder.com/600";
     document.getElementById("pdImage").src = imageUrl;
 
     // Info

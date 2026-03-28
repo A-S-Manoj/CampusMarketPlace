@@ -47,8 +47,10 @@ async function submitProduct(e, type) {
     // Check authentication
     const token = localStorage.getItem("token");
     if (!token) {
-        alert("Please login to add a product.");
-        window.location.href = "login.html";
+        showToast("Please login to add a product.", "info");
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1500);
         return;
     }
 
@@ -87,11 +89,13 @@ async function submitProduct(e, type) {
             throw new Error(err.message || "Failed to add product");
         }
 
-        alert("Product added successfully!");
-        window.location.href = "dashboard.html";
+        showToast("Product added successfully!", "success");
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 1500);
     } catch (error) {
         console.error("Error creating product:", error);
-        alert("Error adding product. Please try again.");
+        showToast("Error adding product. Please try again.", "error");
     }
 }
 
