@@ -15,7 +15,10 @@ exports.register = async (req, res, next) => {
         return res.status(400).json({ success: false, message: "Invalid email format." });
     }
     if (!isValidPassword(password)) {
-        return res.status(400).json({ success: false, message: "Password must be at least 6 characters long." });
+        return res.status(400).json({ 
+            success: false, 
+            message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character." 
+        });
     }
 
     try {

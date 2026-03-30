@@ -13,11 +13,21 @@ exports.getAllProducts = async (req, res, next) => {
             minPrice: req.query.minPrice ? parseFloat(req.query.minPrice) : null,
             maxPrice: req.query.maxPrice ? parseFloat(req.query.maxPrice) : null,
             type: req.query.type,
-            timeframe: req.query.timeframe
+            timeframe: req.query.timeframe,
+            page: parseInt(req.query.page) || 1,
+            limit: parseInt(req.query.limit) || 12
         };
 
-        const products = await productService.getAllProducts(filters);
-        res.json({ success: true, data: products });
+        const result = await productService.getAllProducts(filters);
+        res.json({
+            success: true,
+            data: result.products,
+            pagination: {
+                currentPage: result.currentPage,
+                totalPages: result.totalPages,
+                totalProducts: result.totalProducts
+            }
+        });
     } catch (error) {
         next(error);
     }

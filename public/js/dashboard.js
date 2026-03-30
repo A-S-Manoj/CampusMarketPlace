@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchProducts();
 });
 
+let currentPage = 1;
+
 function openProduct(id) {
     window.location.href = `product.html?id=${id}`;
 }
@@ -12,6 +14,7 @@ const filterOverlay = document.getElementById("filterOverlay");
 const filterBox = document.getElementById("filterBox");
 
 searchInput.addEventListener("input", () => {
+    currentPage = 1;
     filterProducts();
 });
 
@@ -26,22 +29,23 @@ function closeFilter() {
 }
 
 function applyFilters() {
+    currentPage = 1;
     closeFilter();
     filterProducts();
 }
 
 function clearFilters() {
-    // Reset all inputs inside filter box
     document.getElementById("fCategory").value = "";
     document.getElementById("fMinPrice").value = "";
     document.getElementById("fMaxPrice").value = "";
     
     const typeRadios = document.getElementsByName("fType");
-    typeRadios[0].checked = true; // All
+    typeRadios[0].checked = true;
 
     const timeRadios = document.getElementsByName("fTime");
-    timeRadios[0].checked = true; // Any time
+    timeRadios[0].checked = true;
 
+    currentPage = 1;
     closeFilter();
     filterProducts();
 }
@@ -63,7 +67,7 @@ async function filterProducts() {
     const token = localStorage.getItem("token");
 
     try {
-        let url = `/api/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&type=${type}&timeframe=${timeframe}`;
+        let url = `/api/products?search=${search}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&type=${type}&timeframe=${timeframe}&page=${currentPage}`;
         
         const res = await fetch(url, {
             headers: {
@@ -76,6 +80,7 @@ async function filterProducts() {
         const result = await res.json();
         const products = result.data || result;
         displayProducts(products);
+        renderPagination(result.pagination);
 
     } catch (error) {
         console.error("Error filtering products:", error);
@@ -91,7 +96,7 @@ async function fetchProducts() {
     try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch("/api/products", {
+        const response = await fetch(`/api/products?page=${currentPage}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -104,10 +109,65 @@ async function fetchProducts() {
         const result = await response.json();
         const products = result.data || result;
         displayProducts(products);
+        renderPagination(result.pagination);
 
     } catch (error) {
         console.error("Error fetching products:", error);
     }
+}
+
+function goToPage(page) {
+    currentPage = page;
+    // Check if any filters are active
+    const search = searchInput.value;
+    if (search || document.getElementById("fCategory").value) {
+        filterProducts();
+    } else {
+        fetchProducts();
+    }
+    // Scroll to top of product grid
+    document.getElementById("productContainer").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderPagination(pagination) {
+    const container = document.getElementById("paginationControls");
+    if (!pagination || pagination.totalPages <= 1) {
+        container.innerHTML = "";
+        return;
+    }
+
+    const { currentPage: page, totalPages } = pagination;
+    let html = "";
+
+    // Previous button
+    html += `<button ${page <= 1 ? "disabled" : ""} onclick="goToPage(${page - 1})">‹ Prev</button>`;
+
+    // Page number buttons
+    const maxVisible = 5;
+    let startPage = Math.max(1, page - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+    if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+
+    if (startPage > 1) {
+        html += `<button onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += `<span class="page-info">…</span>`;
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === page ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += `<span class="page-info">…</span>`;
+        html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // Next button
+    html += `<button ${page >= totalPages ? "disabled" : ""} onclick="goToPage(${page + 1})">Next ›</button>`;
+
+    container.innerHTML = html;
 }
 
 function displayProducts(products) {

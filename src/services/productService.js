@@ -2,50 +2,61 @@ const db = require("../config/db");
 
 exports.getAllProducts = (filters) => {
     return new Promise((resolve, reject) => {
-        let sql = "SELECT * FROM products WHERE 1=1";
+        let whereSql = " WHERE 1=1";
         let params = [];
 
         if (filters.excludeSellerId) {
-            sql += " AND seller_id != ?";
+            whereSql += " AND seller_id != ?";
             params.push(filters.excludeSellerId);
         }
         
         if (filters.category) {
-            sql += " AND category = ?";
+            whereSql += " AND category = ?";
             params.push(filters.category);
         }
 
         if (filters.search) {
-            sql += " AND (title LIKE ? OR description LIKE ?)";
+            whereSql += " AND (title LIKE ? OR description LIKE ?)";
             params.push(`%${filters.search}%`, `%${filters.search}%`);
         }
 
         if (filters.minPrice) {
-            sql += " AND price >= ?";
+            whereSql += " AND price >= ?";
             params.push(filters.minPrice);
         }
 
         if (filters.maxPrice) {
-            sql += " AND price <= ?";
+            whereSql += " AND price <= ?";
             params.push(filters.maxPrice);
         }
 
         if (filters.type) {
-            sql += " AND type = ?";
+            whereSql += " AND type = ?";
             params.push(filters.type);
         }
 
         if (filters.timeframe === "today") {
-            sql += " AND created_at >= CURDATE()";
+            whereSql += " AND created_at >= CURDATE()";
         } else if (filters.timeframe === "weekly") {
-            sql += " AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+            whereSql += " AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
         }
 
-        sql += " ORDER BY id DESC";
+        // Count total matching products
+        const countSql = "SELECT COUNT(*) AS total FROM products" + whereSql;
+        db.query(countSql, [...params], (err, countResult) => {
+            if (err) return reject("Error counting products");
 
-        db.query(sql, params, (err, results) => {
-            if (err) return reject("Error fetching products");
-            resolve(results);
+            const total = countResult[0].total;
+            const page = filters.page || 1;
+            const limit = filters.limit || 12;
+            const totalPages = Math.ceil(total / limit);
+            const offset = (page - 1) * limit;
+
+            const dataSql = "SELECT * FROM products" + whereSql + " ORDER BY id DESC LIMIT ? OFFSET ?";
+            db.query(dataSql, [...params, limit, offset], (err, results) => {
+                if (err) return reject("Error fetching products");
+                resolve({ products: results, totalPages, currentPage: page, totalProducts: total });
+            });
         });
     });
 };
