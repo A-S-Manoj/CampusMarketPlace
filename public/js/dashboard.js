@@ -73,7 +73,8 @@ async function filterProducts() {
 
         if (!res.ok) throw new Error("Filter failed");
 
-        const products = await res.json();
+        const result = await res.json();
+        const products = result.data || result;
         displayProducts(products);
 
     } catch (error) {
@@ -100,7 +101,8 @@ async function fetchProducts() {
             throw new Error("Failed to fetch products");
         }
 
-        const products = await response.json();
+        const result = await response.json();
+        const products = result.data || result;
         displayProducts(products);
 
     } catch (error) {

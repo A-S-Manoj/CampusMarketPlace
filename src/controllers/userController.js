@@ -1,28 +1,41 @@
 const userService = require("../services/userService");
+const { deleteImage } = require("../config/cloudinary");
+const fs = require("fs");
+const path = require("path");
 
-exports.getProfile = async (req, res) => {
+exports.getProfile = async (req, res, next) => {
     try {
         const userId = req.user.id;
         const profile = await userService.getUserProfile(userId);
-        res.status(200).json(profile);
+        res.status(200).json({ success: true, data: profile });
     } catch (error) {
-        res.status(500).json({ message: error });
+        next(error);
     }
 };
 
-exports.updateProfile = async (req, res) => {
+exports.updateProfile = async (req, res, next) => {
     try {
         const userId = req.user.id;
         const profileData = { ...req.body };
 
-        // If an image was uploaded, store the path (Cloudinary URL in prod, local path in dev)
+        // If an image was uploaded, store the path
         if (req.file) {
+            // Get old profile to delete old pic
+            const oldProfile = await userService.getUserProfile(userId);
+            if (oldProfile && oldProfile.profile_pic) {
+                if (oldProfile.profile_pic.startsWith("http")) {
+                    await deleteImage(oldProfile.profile_pic);
+                } else if (oldProfile.profile_pic.startsWith("/uploads/")) {
+                    const localPath = path.join(__dirname, "../../public", oldProfile.profile_pic);
+                    if (fs.existsSync(localPath)) fs.unlinkSync(localPath);
+                }
+            }
             profileData.profile_pic = req.file.path || `/uploads/${req.file.filename}`;
         }
 
         const message = await userService.updateUserProfile(userId, profileData);
-        res.status(200).json({ message });
+        res.status(200).json({ success: true, message });
     } catch (error) {
-        res.status(500).json({ message: error });
+        next(error);
     }
 };

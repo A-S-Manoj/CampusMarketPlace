@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>CampusMarketplace - Chat</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="css/notifications.css">
 </head>
@@ -47,22 +52,6 @@
                 </div>
 
                 <div class="chat-sb-list" id="conversationList">
-
-
-                    <div class="chat-sb-item active">
-                        <div class="chat-sb-avatar">U</div>
-                        <div class="chat-sb-info">
-                            <span class="chat-sb-name">User 1</span>
-                        </div>
-                    </div>
-
-                    <div class="chat-sb-item">
-                        <div class="chat-sb-avatar">U</div>
-                        <div class="chat-sb-info">
-                            <span class="chat-sb-name">User 2</span>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
@@ -71,48 +60,26 @@
 
             <div class="chat-main">
 
-                <div class="chat-main-header">
-
+                <div class="chat-main-header" id="chatMainHeader" style="display: none;">
                     <div class="chat-mh-user">
-
-                        <div class="chat-sb-avatar small">U</div>
-
-                        <h3 id="chatUserName">User 1</h3>
-
+                        <div class="chat-sb-avatar small"></div>
+                        <h3 id="chatUserName"></h3>
                     </div>
-
                 </div>
-
-
 
                 <div class="chat-messages" id="chatMessages">
-
-                    <div class="chat-bubble-wrap them">
-                        <div class="chat-bubble">
-                            <p>Hello</p>
-                            <span class="chat-time">10:30</span>
-                        </div>
+                    <div class="chat-empty-state" id="chatEmptyState">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <h3>No conversation selected</h3>
+                        <p>Choose a conversation from the sidebar or contact a seller to start chatting.</p>
                     </div>
-
-                    <div class="chat-bubble-wrap me">
-                        <div class="chat-bubble">
-                            <p>Hi there!</p>
-                            <span class="chat-time">10:31</span>
-                        </div>
-                    </div>
-
                 </div>
 
-
-
-                <form class="chat-input-area" id="chatForm">
-
+                <form class="chat-input-area" id="chatForm" style="display: none;">
                     <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input">
-
-                    <button type="submit" class="chat-send-btn">
-                        ➤
-                    </button>
-
+                    <button type="submit" class="chat-send-btn">➤</button>
                 </form>
 
             </div>

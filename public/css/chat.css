@@ -3,6 +3,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    font-family: var(--font-body);
 }
 
 header {
@@ -427,4 +428,59 @@ footer a {
 
     cursor: pointer;
 
+}
+
+/* Empty states */
+.chat-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+    color: #555;
+    text-align: center;
+    padding: 40px;
+}
+
+.chat-empty-state svg {
+    opacity: 0.4;
+    margin-bottom: 8px;
+}
+
+.chat-empty-state h3 {
+    font-family: var(--font-main);
+    font-size: 18px;
+    color: #666;
+    margin: 0;
+}
+
+.chat-empty-state p {
+    font-size: 14px;
+    color: #555;
+    max-width: 280px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.chat-sb-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+    color: #555;
+    text-align: center;
+    padding: 30px;
+}
+
+.chat-sb-empty svg {
+    opacity: 0.3;
+}
+
+.chat-sb-empty p {
+    font-size: 13px;
+    color: #555;
+    margin: 0;
 }

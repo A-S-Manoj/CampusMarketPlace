@@ -15,7 +15,8 @@ async function loadProfile() {
         
         if (!res.ok) throw new Error("Failed to fetch profile");
         
-        const profile = await res.json();
+        const result = await res.json();
+        const profile = result.data || result;
         currentProfile = profile;
         displayProfile(profile);
     } catch (err) {
@@ -100,7 +101,8 @@ async function loadMyProducts() {
 
         if (!response.ok) throw new Error("Failed to fetch products");
 
-        const products = await response.json();
+        const result = await response.json();
+        const products = result.data || result;
         displayMyProducts(products);
     } catch (error) {
         console.error("Error fetching my products:", error);

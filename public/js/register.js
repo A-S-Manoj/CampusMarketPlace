@@ -6,6 +6,33 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     const email = document.getElementById("email").value;
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password.length < 8) {
+        showToast("Password must be at least 8 characters", "error");
+        return;
+    }
+    if (!/[a-z]/.test(password)) {
+        showToast("Password must contain a lowercase letter", "error");
+        return;
+    }
+    if (!/[A-Z]/.test(password)) {
+        showToast("Password must contain an uppercase letter", "error");
+        return;
+    }
+    if (!/[0-9]/.test(password)) {
+        showToast("Password must contain a digit", "error");
+        return;
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+        showToast("Password must contain a special character", "error");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showToast("Passwords do not match", "error");
+        return;
+    }
 
     const response = await fetch("/register", {
         method: "POST",

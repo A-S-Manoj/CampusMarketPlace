@@ -18,12 +18,12 @@
         const canvas = document.createElement('canvas');
         canvas.id = 'fluid';
         canvas.style.position = 'absolute';
-        canvas.style.top = '80px';
+        canvas.style.top = '100px';
         canvas.style.left = '0';
         canvas.style.zIndex = '-1';
         canvas.style.pointerEvents = 'none';
         canvas.style.width = '100%';
-        canvas.style.height = '84%';
+        canvas.style.height = '75%';
         canvas.style.display = 'block';
         document.body.appendChild(canvas);
 

@@ -1,12 +1,12 @@
 const db = require("../config/db");
 
 // Start or get an existing conversation
-exports.startConversation = async (req, res) => {
+exports.startConversation = async (req, res, next) => {
     let { userId2, productId } = req.body;
-    const userId1 = req.user.id; // From authenticateToken middleware
+    const userId1 = req.user.id; 
 
     if (!userId2) {
-        return res.status(400).json({ error: "Missing required fields: userId2 is required." });
+        return res.status(400).json({ success: false, message: "Missing required fields: userId2 is required." });
     }
 
     // Sanitize productId
@@ -14,32 +14,31 @@ exports.startConversation = async (req, res) => {
         productId = null;
     }
 
-
     // Prevent user from chatting with themselves
     if (userId1 === parseInt(userId2)) {
-        return res.status(400).json({ error: "Cannot start a conversation with yourself." });
+        return res.status(400).json({ success: false, message: "Cannot start a conversation with yourself." });
     }
 
     try {
-        // Check if conversation already exists between these 2 users (and optionally this product)
-        let query = `
+        // Check if conversation already exists between these 2 users (one conversation per user pair)
+        const query = `
             SELECT id FROM conversations 
             WHERE ((user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?))
+            LIMIT 1
         `;
-        let params = [userId1, userId2, userId2, userId1];
-
-        if (productId) {
-            query += " AND product_id = ?";
-            params.push(productId);
-        } else {
-            query += " AND product_id IS NULL";
-        }
+        const params = [userId1, userId2, userId2, userId1];
 
         const [existingConv] = await db.promise().query(query, params);
 
         if (existingConv.length > 0) {
-            // Conversation exists, return its ID
-            return res.status(200).json({ conversationId: existingConv[0].id });
+            // Update product context if a new product is being discussed
+            if (productId) {
+                await db.promise().query(
+                    "UPDATE conversations SET product_id = ? WHERE id = ?",
+                    [productId, existingConv[0].id]
+                );
+            }
+            return res.status(200).json({ success: true, conversationId: existingConv[0].id });
         }
 
         // Doesn't exist, create a new one
@@ -48,21 +47,17 @@ exports.startConversation = async (req, res) => {
             [userId1, userId2, productId || null]
         );
 
-        res.status(201).json({ conversationId: result.insertId });
-
+        res.status(201).json({ success: true, conversationId: result.insertId });
     } catch (err) {
-        console.error("Error starting conversation:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        next(err);
     }
 };
 
 // Get all conversations for the logged-in user
-exports.getUserConversations = async (req, res) => {
+exports.getUserConversations = async (req, res, next) => {
     const userId = req.user.id;
 
     try {
-        // Fetch conversations and join with users table to get the OTHER user's details
-        // and optionally join products for product context
         const query = `
             SELECT c.id AS conversation_id, c.created_at,
                    u.id AS other_user_id, u.username AS other_user_name, u.profile_pic AS other_user_pic,
@@ -75,17 +70,14 @@ exports.getUserConversations = async (req, res) => {
         `;
 
         const [conversations] = await db.promise().query(query, [userId, userId, userId]);
-
-        res.status(200).json(conversations);
-
+        res.status(200).json({ success: true, data: conversations });
     } catch (err) {
-        console.error("Error getting user conversations:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        next(err);
     }
 };
 
 // Get messages for a conversation
-exports.getConversationMessages = async (req, res) => {
+exports.getConversationMessages = async (req, res, next) => {
     const userId = req.user.id;
     const { conversationId } = req.params;
 
@@ -97,7 +89,7 @@ exports.getConversationMessages = async (req, res) => {
         );
 
         if (conv.length === 0) {
-            return res.status(403).json({ error: "Forbidden: You are not part of this conversation." });
+            return res.status(403).json({ success: false, message: "Forbidden: You are not part of this conversation." });
         }
 
         // Fetch messages
@@ -106,10 +98,8 @@ exports.getConversationMessages = async (req, res) => {
             [conversationId]
         );
 
-        res.status(200).json(messages);
-
+        res.status(200).json({ success: true, data: messages });
     } catch (err) {
-        console.error("Error fetching messages:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        next(err);
     }
 };

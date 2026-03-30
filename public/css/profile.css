@@ -2,6 +2,7 @@
     max-width: 1200px;
     margin: 90px auto 0;
     padding: 20px;
+    font-family: var(--font-body);
 }
 
 .profile-section {

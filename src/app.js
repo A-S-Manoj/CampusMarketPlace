@@ -28,8 +28,27 @@ app.use("/api/users", userRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-    console.error("Global Error Handler:", err);
-    res.status(err.status || 500).json({ message: err.message || "Internal Server Error" });
+    // Normalize: err could be a string, Error object, or anything
+    const isErrorObj = err instanceof Error;
+    const errMessage = isErrorObj ? err.message : (typeof err === "string" ? err : "Internal Server Error");
+    const errStack = isErrorObj ? err.stack : undefined;
+    const status = err.status || 500;
+
+    // Log error for developers
+    console.error("Internal Error Log:", {
+        message: errMessage,
+        stack: process.env.NODE_ENV === "development" ? errStack : undefined,
+        status: status
+    });
+
+    const clientMessage = (process.env.NODE_ENV === "production" && status === 500)
+        ? "Something went wrong on our end. Please try again later."
+        : errMessage;
+
+    res.status(status).json({
+        success: false,
+        message: clientMessage
+    });
 });
 
 module.exports = app;

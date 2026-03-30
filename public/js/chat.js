@@ -65,11 +65,18 @@ async function loadConversations() {
 
         if (!res.ok) throw new Error("Failed to fetch conversations");
 
-        const conversations = await res.json();
+        const result = await res.json();
+        const conversations = result.data || result;
         conversationList.innerHTML = "";
 
         if (conversations.length === 0) {
-            conversationList.innerHTML = "<div style='padding: 20px; color: #888; text-align: center'>No conversations yet.</div>";
+            conversationList.innerHTML = `
+                <div class="chat-sb-empty">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <p>No conversations yet.<br>Contact a seller to start chatting.</p>
+                </div>`;
             return;
         }
 
@@ -116,7 +123,15 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
     currentConversationId = conversationId;
     activeReceiverId = receiverId;
     chatUserName.textContent = receiverName;
-    
+
+    // Show header and input form
+    document.getElementById("chatMainHeader").style.display = "";
+    document.getElementById("chatForm").style.display = "";
+
+    // Hide the empty state
+    const emptyState = document.getElementById("chatEmptyState");
+    if (emptyState) emptyState.remove();
+
     // Update main header avatar
     const headerAvatar = document.querySelector(".chat-main-header .chat-sb-avatar.small");
     if (headerAvatar) {
@@ -135,11 +150,18 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
 
         if (!res.ok) throw new Error("Failed to fetch messages");
 
-        const messages = await res.json();
+        const result = await res.json();
+        const messages = result.data || result;
 
         // Show welcome if no messages
         if (messages.length === 0) {
-            chatMessages.innerHTML = "<div style='text-align: center; color: #666; width: 100%; margin-top: 20px;'>No messages yet. Say hi!</div>";
+            chatMessages.innerHTML = `
+                <div class="chat-empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <p>No messages yet. Say hi! 👋</p>
+                </div>`;
             return;
         }
 
@@ -171,10 +193,9 @@ chatForm.addEventListener("submit", function (e) {
 });
 
 function addMessageToDOM(text, type, dateObj = new Date()) {
-    // Remove "No messages" text if it exists
-    if (chatMessages.innerHTML.includes("No messages yet")) {
-        chatMessages.innerHTML = "";
-    }
+    // Remove empty state if it exists
+    const emptyState = chatMessages.querySelector(".chat-empty-state");
+    if (emptyState) emptyState.remove();
 
     const wrapper = document.createElement("div");
     wrapper.classList.add("chat-bubble-wrap", type);

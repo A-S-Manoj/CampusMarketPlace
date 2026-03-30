@@ -19,7 +19,8 @@ async function loadProductDetails() {
             throw new Error("Failed to fetch product details");
         }
 
-        const product = await response.json();
+        const result = await response.json();
+        const product = result.data || result;
         
         if (!product) {
             showError("Product not found.");

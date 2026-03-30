@@ -1,10 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Quicksand', sans-serif;
 }
 
 header {
@@ -13,7 +10,7 @@ header {
     left: 0;
     background: black;
     width: 100%;
-    height: 75px;
+    height: 100px;
     color: white;
     padding: 15px 40px;
     display: flex;
@@ -115,7 +112,9 @@ section .signin .content {
 
 section .signin .content h2 {
     font-size: 2em;
-    color: rgb(177, 179, 193);
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
+    background-clip: text;
     text-transform: uppercase;
 }
 
@@ -183,12 +182,13 @@ section .signin .content .form .inputBox i {
 .signin .content .form .inputBox input[type="submit"] {
     margin-top: 20px;
     padding: 10px;
-    background: rgb(177, 179, 193);
-    color: #000;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
+    color: #fff;
     font-weight: 600;
     font-size: 1.35em;
     letter-spacing: 0.05em;
     cursor: pointer;
+    transition: opacity 0.3s ease;
 }
 
 input[type="submit"]:active {
