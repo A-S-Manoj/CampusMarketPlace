@@ -26,4 +26,10 @@ app.use("/api/products", productRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error("Global Error Handler:", err);
+    res.status(err.status || 500).json({ message: err.message || "Internal Server Error" });
+});
+
 module.exports = app;

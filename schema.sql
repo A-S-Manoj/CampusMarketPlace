@@ -1,7 +1,4 @@
 -- CampusMarketPlace Database Schema
--- Run this in TiDB Cloud SQL Editor or via mysql CLI
--- Database: test (or campusmarketplace)
-
 -- --------------------------------------------------------
 -- Table: users
 -- --------------------------------------------------------
