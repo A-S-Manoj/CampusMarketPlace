@@ -17,21 +17,31 @@ exports.getUserProfile = (userId) => {
 
 exports.updateUserProfile = (userId, profileData) => {
     return new Promise((resolve, reject) => {
-        const { mobile_number, student_type, hostel, year_of_study, course, profile_pic } = profileData;
-        
-        // Build dynamic query depending on if profile_pic was uploaded
-        let sql = `
-            UPDATE users 
-            SET mobile_number = ?, student_type = ?, hostel = ?, year_of_study = ?, course = ?
-        `;
-        let params = [mobile_number, student_type, hostel, year_of_study, course];
+        // Map of allowed fields to their values in profileData
+        const allowedFields = [
+            "mobile_number",
+            "student_type",
+            "hostel",
+            "year_of_study",
+            "course",
+            "profile_pic"
+        ];
 
-        if (profile_pic !== undefined) {
-            sql += `, profile_pic = ?`;
-            params.push(profile_pic);
+        let setClauses = [];
+        let params = [];
+
+        allowedFields.forEach(field => {
+            if (profileData[field] !== undefined) {
+                setClauses.push(`${field} = ?`);
+                params.push(profileData[field]);
+            }
+        });
+
+        if (setClauses.length === 0) {
+            return resolve("No changes to update");
         }
 
-        sql += ` WHERE id = ?`;
+        const sql = `UPDATE users SET ${setClauses.join(", ")} WHERE id = ?`;
         params.push(userId);
 
         db.query(sql, params, (err, result) => {

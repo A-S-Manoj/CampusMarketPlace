@@ -131,11 +131,9 @@ footer a {
 
 
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
+    max-width: 1100px;
+    margin: 110px auto 40px;
+    padding: 0 20px;
     min-height: 80vh;
 }
 
@@ -158,7 +156,7 @@ footer a {
 }
 
 .toggle-container .active {
-    background: #2d89ef;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
 }
 
 
@@ -251,6 +249,7 @@ footer a {
 .flip-card {
     width: 720px;
     height: 430px;
+    margin: 0 auto;
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.7s ease;
@@ -279,6 +278,16 @@ footer a {
     border-radius: 10px;
     overflow: hidden;
     margin-top: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview:hover {
+    border-color: #7b7d7d;
+    background-color: rgba(3, 169, 244, 0.05);
 }
 
 .image-preview img {
@@ -303,13 +312,20 @@ footer a {
     padding: 12px 35px;
     border: none;
     border-radius: 8px;
-    background: #2d89ef;
+    background: linear-gradient(90deg, #03a9f4, #f441a5);
     color: white;
     cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.submit-area button:active {
+    transform: scale(0.98);
+    opacity: 0.8;
 }
 
 .submit-area button:hover {
-    background: #1b5fad;
+    opacity: 0.9;
 }
 
 

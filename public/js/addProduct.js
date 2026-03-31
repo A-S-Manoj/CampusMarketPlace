@@ -31,6 +31,11 @@ imageSell.addEventListener("change", () => {
     }
 });
 
+// Click preview to trigger file upload
+previewSellContainer.addEventListener("click", () => {
+    imageSell.click();
+});
+
 const imageLend = document.getElementById("imageLend");
 const previewLendContainer = document.getElementById("previewLendContainer");
 
@@ -39,6 +44,11 @@ imageLend.addEventListener("change", () => {
     if (file) {
         previewLendContainer.innerHTML = `<img id="previewLend" src="${URL.createObjectURL(file)}">`;
     }
+});
+
+// Click preview to trigger file upload
+previewLendContainer.addEventListener("click", () => {
+    imageLend.click();
 });
 
 async function submitProduct(e, type) {

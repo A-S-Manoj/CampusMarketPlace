@@ -16,8 +16,9 @@ exports.getAllProducts = (filters) => {
         }
 
         if (filters.search) {
-            whereSql += " AND (title LIKE ? OR description LIKE ?)";
-            params.push(`%${filters.search}%`, `%${filters.search}%`);
+            const searchTerm = `%${filters.search.toLowerCase()}%`;
+            whereSql += " AND (LOWER(title) LIKE ? OR LOWER(description) LIKE ?)";
+            params.push(searchTerm, searchTerm);
         }
 
         if (filters.minPrice) {

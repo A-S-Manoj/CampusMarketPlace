@@ -92,6 +92,34 @@ async function handleProfileUpdate(e) {
     }
 }
 
+async function handleDirectPhotoUpload(input) {
+    if (!input.files || !input.files[0]) return;
+
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("profile_pic", input.files[0]);
+
+    try {
+        const res = await fetch("/api/users/profile", {
+            method: "PUT",
+            headers: { "Authorization": `Bearer ${token}` },
+            body: formData
+        });
+
+        if (res.ok) {
+            showToast("Profile picture updated!", "success");
+            loadProfile();
+        } else {
+            showToast("Failed to update picture.", "error");
+            const data = await res.json();
+            console.error(data.message);
+        }
+    } catch (err) {
+        console.error("Direct photo upload error:", err);
+        showToast("Error updating picture.", "error");
+    }
+}
+
 async function loadMyProducts() {
     try {
         const token = localStorage.getItem("token");
@@ -114,7 +142,12 @@ function displayMyProducts(products) {
     container.innerHTML = "";
 
     if (products.length === 0) {
-        container.innerHTML = "<p>You haven't added any products yet.</p>";
+        container.innerHTML = `
+            <div class="empty-state">
+                <p>You haven't added any products yet.</p>
+                <button class="btn btn-save" onclick="window.location.href='addProduct.html'">Add your first product</button>
+            </div>
+        `;
         return;
     }
 

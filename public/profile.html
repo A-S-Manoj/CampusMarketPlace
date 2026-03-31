@@ -29,11 +29,18 @@
     </header>
 
     <main class="profile-container">
+        <div class="breadcrumb">
+            <a href="dashboard.html">Dashboard</a> / <span>My Profile</span>
+        </div>
         <section class="profile-section">
             <div class="profile-header">
-                <div class="profile-pic-wrapper">
+                <div class="profile-pic-wrapper" onclick="document.getElementById('hiddenProfilePicInput').click()" title="Click to change profile picture">
                     <img id="profilePicImg" src="/assets/images/NoPfp.jpg" alt="Profile Picture">
+                    <div class="profile-pic-overlay">
+                        <span>Change Photo</span>
+                    </div>
                 </div>
+                <input type="file" id="hiddenProfilePicInput" class="hide" accept="image/*" onchange="handleDirectPhotoUpload(this)">
                 <!-- Read Mode -->
                 <div id="profileReadMode" class="profile-info">
                     <h2 id="profileName">Loading Name...</h2>

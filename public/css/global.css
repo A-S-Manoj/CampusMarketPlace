@@ -2,6 +2,7 @@
     --font-main: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
     --primary-gradient: linear-gradient(90deg, #03a9f4, #f441a5);
+    --accent-blue: #03a9f4;
 }
 
 * {
@@ -24,4 +25,28 @@ h1, h2, h3, h4, h5, h6 {
 
 input, button, select, textarea {
     font-family: var(--font-body);
+}
+
+.breadcrumb {
+    margin-bottom: 25px;
+    padding-left: 10px;
+    font-size: 14px;
+    color: #666;
+    letter-spacing: 0.5px;
+    font-family: var(--font-main);
+}
+
+.breadcrumb a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+    color: var(--accent-blue);
+}
+
+.breadcrumb span {
+    color: #999;
+    font-weight: 500;
 }
