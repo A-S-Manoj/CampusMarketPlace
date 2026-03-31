@@ -44,7 +44,7 @@ exports.getAllProducts = (filters) => {
         // Count total matching products
         const countSql = "SELECT COUNT(*) AS total FROM products" + whereSql;
         db.query(countSql, [...params], (err, countResult) => {
-            if (err) return reject("Error counting products");
+            if (err) return reject(new Error("Error counting products: " + err.message));
 
             const total = countResult[0].total;
             const page = filters.page || 1;
@@ -54,7 +54,7 @@ exports.getAllProducts = (filters) => {
 
             const dataSql = "SELECT * FROM products" + whereSql + " ORDER BY id DESC LIMIT ? OFFSET ?";
             db.query(dataSql, [...params, limit, offset], (err, results) => {
-                if (err) return reject("Error fetching products");
+                if (err) return reject(new Error("Error fetching products: " + err.message));
                 resolve({ products: results, totalPages, currentPage: page, totalProducts: total });
             });
         });
@@ -65,7 +65,7 @@ exports.getMyProducts = (seller_id) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM products WHERE seller_id = ? ORDER BY id DESC";
         db.query(sql, [seller_id], (err, results) => {
-            if (err) return reject("Error fetching user products");
+            if (err) return reject(new Error("Error fetching user products: " + err.message));
             resolve(results);
         });
     });
@@ -83,7 +83,7 @@ exports.createProduct = (productData, seller_id) => {
             sql,
             [title, description, price, category, type, image_url, seller_id],
             (err, result) => {
-                if (err) return reject("Error creating product");
+                if (err) return reject(new Error("Error creating product: " + err.message));
                 resolve(result.insertId);
             }
         );
@@ -94,7 +94,7 @@ exports.getProductById = (id) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM products WHERE id = ?";
         db.query(sql, [id], (err, results) => {
-            if (err) return reject("Error fetching product");
+            if (err) return reject(new Error("Error fetching product: " + err.message));
             resolve(results[0]);
         });
     });
@@ -115,8 +115,8 @@ exports.updateProduct = (id, productData, seller_id) => {
         params.push(id, seller_id);
 
         db.query(sql, params, (err, result) => {
-            if (err) return reject("Error updating product");
-            if (result.affectedRows === 0) return reject("Unauthorized or product not found");
+            if (err) return reject(new Error("Error updating product: " + (err ? err.message : "Unknown error")));
+            if (result.affectedRows === 0) return reject(new Error("Unauthorized or product not found"));
             resolve("Product updated successfully");
         });
     });
@@ -126,8 +126,8 @@ exports.deleteProduct = (id, seller_id) => {
     return new Promise((resolve, reject) => {
         const sql = "DELETE FROM products WHERE id = ? AND seller_id = ?";
         db.query(sql, [id, seller_id], (err, result) => {
-            if (err) return reject("Error deleting product");
-            if (result.affectedRows === 0) return reject("Unauthorized or product not found");
+            if (err) return reject(new Error("Error deleting product: " + (err ? err.message : "Unknown error")));
+            if (result.affectedRows === 0) return reject(new Error("Unauthorized or product not found"));
             resolve("Product deleted successfully");
         });
     });

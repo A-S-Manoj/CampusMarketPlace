@@ -8,10 +8,11 @@ const db = mysql.createPool({
     database: process.env.DB_NAME ? process.env.DB_NAME.trim() : "",
     ssl: {
         minVersion: "TLSv1.2",
-        rejectUnauthorized: true
+        // Allow disabling restriction on local/development if needed, but defaults to true for safety
+        rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === "false" ? false : true
     },
     waitForConnections: true,
-    connectionLimit: 5,
+    connectionLimit: 10, // Increased limit for production
     queueLimit: 0,
 });
 

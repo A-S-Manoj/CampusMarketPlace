@@ -32,9 +32,13 @@ async function initChat() {
         const data = await res.json();
         currentUser = data.user;
 
-        // Initialize Socket.io
-        socket = io();
-        socket.emit("register", currentUser.id);
+        // Use Global Socket
+        socket = CampusSocket.getSocket();
+        if (!socket) {
+            // In case it's not ready yet, we can try to wait or re-init
+            CampusSocket.init();
+            socket = CampusSocket.getSocket();
+        }
 
         setupSocketListeners();
 
@@ -123,6 +127,11 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
     currentConversationId = conversationId;
     activeReceiverId = receiverId;
     chatUserName.textContent = receiverName;
+    
+    // Notify global socket client about active conversation to suppress toasts
+    if (window.CampusSocket) {
+        window.CampusSocket.setActiveConversation(conversationId);
+    }
 
     // Show header and input form
     document.getElementById("chatMainHeader").style.display = "";

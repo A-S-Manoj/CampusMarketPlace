@@ -8,8 +8,8 @@ exports.getUserProfile = (userId) => {
             WHERE id = ?
         `;
         db.query(sql, [userId], (err, results) => {
-            if (err) return reject("Error fetching user profile");
-            if (results.length === 0) return reject("User not found");
+            if (err) return reject(new Error("Error fetching user profile: " + err.message));
+            if (results.length === 0) return reject(new Error("User not found"));
             resolve(results[0]);
         });
     });
@@ -35,7 +35,7 @@ exports.updateUserProfile = (userId, profileData) => {
         params.push(userId);
 
         db.query(sql, params, (err, result) => {
-            if (err) return reject("Error updating user profile");
+            if (err) return reject(new Error("Error updating user profile: " + err.message));
             resolve("Profile updated successfully");
         });
     });

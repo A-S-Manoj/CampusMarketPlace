@@ -34,10 +34,10 @@ app.use((err, req, res, next) => {
     const errStack = isErrorObj ? err.stack : undefined;
     const status = err.status || 500;
 
-    // Log error for developers
+    // Log full error for developers in Render/Local console
     console.error("Internal Error Log:", {
         message: errMessage,
-        stack: process.env.NODE_ENV === "development" ? errStack : undefined,
+        stack: errStack || "No stack trace available",
         status: status
     });
 

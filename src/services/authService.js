@@ -7,7 +7,7 @@ exports.registerUser = (name, username, email, password) => {
 
         bcrypt.hash(password, 10, (err, hashedPassword) => {
 
-            if (err) return reject("Error hashing password");
+            if (err) return reject(new Error("Error hashing password: " + err.message));
 
             const sql =
                 "INSERT INTO users (name, username, email, password) VALUES (?, ?, ?, ?)";
@@ -17,7 +17,7 @@ exports.registerUser = (name, username, email, password) => {
                 [name, username, email, hashedPassword],
                 (err, result) => {
 
-                    if (err) return reject("User already exists");
+                    if (err) return reject(new Error("Error registering user: " + (err.code === "ER_DUP_ENTRY" ? "User already exists" : err.message)));
 
                     resolve("User registered successfully");
                 }
@@ -33,7 +33,7 @@ exports.loginUser = (username, password) => {
 
         db.query(sql, [username], (err, results) => {
 
-            if (err) return reject("Database error");
+            if (err) return reject(new Error("Database error during login: " + err.message));
 
             if (results.length === 0)
                 return reject("Invalid username or password");
@@ -43,7 +43,7 @@ exports.loginUser = (username, password) => {
             bcrypt.compare(password, user.password, (err, isMatch) => {
 
                 if (!isMatch)
-                    return reject("Invalid username or password");
+                    return reject(new Error("Invalid username or password"));
 
                 const token = jwt.sign(
                     { id: user.id, username: user.username },
