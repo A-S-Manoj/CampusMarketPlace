@@ -60,3 +60,14 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id)       REFERENCES users(id)         ON DELETE CASCADE
 );
+-- --------------------------------------------------------
+-- Table: support_messages
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS support_messages (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    user_id         INT           NOT NULL,
+    message         TEXT          NOT NULL,
+    status          VARCHAR(50)   DEFAULT 'pending',
+    created_at      TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

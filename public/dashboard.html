@@ -26,6 +26,9 @@
             <a href="chat.html">Chat</a>
 
             <a href="profile.html">Profile</a>
+            <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">
+                <!-- Icon will be injected by theme.js -->
+            </button>
             <button class="logout-btn" onclick="logout()" title="Logout">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -149,12 +152,13 @@
     </main>
 
     <footer>
-        <a href="#">About</a>
-        <a href="#">Contact Us</a>
-        <a href="#">Support</a>
+        <a href="support.html#about">About</a>
+        <a href="support.html#contact">Contact Us</a>
+        <a href="support.html#support">Support</a>
         <br><br>
         &copy; 2026 CampusMarketPlace. All Rights Reserved.
     </footer>
+    <script src="js/utils/theme.js"></script>
     <script src="js/utils/auth.js"></script>
     <script src="js/utils/notifications.js"></script>
     <script src="/socket.io/socket.io.js"></script>

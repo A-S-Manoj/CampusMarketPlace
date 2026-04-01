@@ -193,9 +193,7 @@ function displayProducts(products) {
                  <span>No Image Available</span>
                </div>`;
 
-        const statusText = product.status === "available"
-            ? "In Stock"
-            : "Not Available";
+        const typeText = product.type === "sell" ? "For Buy" : "For Rent";
 
         const card = `
             <div class="card" onclick="openProduct(${product.id})">
@@ -219,7 +217,7 @@ function displayProducts(products) {
 
                     <div class="bottom">
                         <div class="price">
-                            <span class="new">₹${product.price}</span>
+                            <span class="new">₹${product.price}${product.type === 'lend' ? '/day' : ''}</span>
                         </div>
 
                         <button class="btn" onclick="contactSeller(${product.seller_id}, ${product.id}, event)">
@@ -229,7 +227,7 @@ function displayProducts(products) {
                     </div>
 
                     <div class="meta">
-                        <div class="stock">${statusText}</div>
+                        <div class="stock">${typeText}</div>
                     </div>
                 </div>
             </div>

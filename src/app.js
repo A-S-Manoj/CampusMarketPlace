@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const userRoutes = require("./routes/userRoutes");
+const supportRoutes = require("./routes/supportRoutes");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.get("/protected", authenticateToken, (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/support", supportRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

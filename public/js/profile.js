@@ -120,6 +120,8 @@ async function handleDirectPhotoUpload(input) {
     }
 }
 
+let myProducts = [];
+
 async function loadMyProducts() {
     try {
         const token = localStorage.getItem("token");
@@ -131,6 +133,7 @@ async function loadMyProducts() {
 
         const result = await response.json();
         const products = result.data || result;
+        myProducts = products;
         displayMyProducts(products);
     } catch (error) {
         console.error("Error fetching my products:", error);
@@ -168,8 +171,8 @@ function displayMyProducts(products) {
 
         // Create product card but modify the bottom section for Edit / Delete instead of Contact
         const card = `
-            <div class="card">
-                <div class="tilt" onclick="openProduct(${product.id})" style="cursor:pointer">
+            <div class="card" onclick="openProduct(${product.id})" style="cursor:pointer">
+                <div class="tilt">
                     <div class="img">
                         ${imageHtml}
                     </div>
@@ -177,16 +180,19 @@ function displayMyProducts(products) {
 
                 <div class="info">
                     <div class="cat">${product.category}</div>
-                    <h2 class="title" style="cursor:pointer" onclick="openProduct(${product.id})">${product.title}</h2>
+                    <h2 class="title">${product.title}</h2>
                     <p class="desc">${product.description}</p>
                     <div class="bottom">
                         <div class="price">
-                            <span class="new">₹${product.price}</span>
+                            <span class="new">₹${product.price}${product.type === 'lend' ? '/day' : ''}</span>
+                        </div>
+                        <div class="pd-type-badge" style="margin: 0; padding: 2px 10px; font-size: 11px;">
+                            ${product.type === 'sell' ? 'For Buy' : 'For Rent'}
                         </div>
                     </div>
                     <div class="my-product-actions">
-                        <button class="btn btn-edit-profile" onclick="openEditProductModal(${product.id}, '${product.title.replace(/'/g, "\\'")}', '${product.description.replace(/'/g, "\\'")}', ${product.price}, '${product.category}', '${product.type}')">✏️ Edit</button>
-                        <button class="btn btn-delete" onclick="handleDeleteProduct(${product.id})">🗑 Delete</button>
+                        <button class="btn btn-edit-profile" onclick="event.stopPropagation(); openEditProductModal(${product.id})">✏️ Edit</button>
+                        <button class="btn btn-delete" onclick="event.stopPropagation(); handleDeleteProduct(${product.id})">🗑 Delete</button>
                     </div>
                 </div>
             </div>
@@ -221,13 +227,16 @@ async function handleDeleteProduct(id) {
     }
 }
 
-function openEditProductModal(id, title, desc, price, category, type) {
-    document.getElementById("editProductId").value = id;
-    document.getElementById("editPTitle").value = title;
-    document.getElementById("editPDesc").value = desc;
-    document.getElementById("editPPrice").value = price;
-    document.getElementById("editPCat").value = category;
-    document.getElementById("editPType").value = type;
+function openEditProductModal(id) {
+    const product = myProducts.find(p => p.id === id);
+    if (!product) return;
+
+    document.getElementById("editProductId").value = product.id;
+    document.getElementById("editPTitle").value = product.title;
+    document.getElementById("editPDesc").value = product.description;
+    document.getElementById("editPPrice").value = product.price;
+    document.getElementById("editPCat").value = product.category;
+    document.getElementById("editPType").value = product.type;
     
     document.getElementById("editProductModal").classList.remove("hide");
 }

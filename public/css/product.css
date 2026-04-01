@@ -1,8 +1,7 @@
 .product-container {
-    max-width: 1100px;
-    margin: 110px auto 40px;
+    max-width: 1000px;
+    margin: 120px auto 40px;
     padding: 0 20px;
-    font-family: var(--font-body);
 }
 
 .loading-state,
@@ -10,8 +9,10 @@
     text-align: center;
     font-size: 20px;
     padding: 50px;
-    background: #000;
-    border-radius: 15px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    color: var(--text-main);
 }
 
 .error-state {
@@ -21,10 +22,11 @@
 .product-detail-wrapper {
     display: flex;
     gap: 40px;
-    background: #000;
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
 }
 
 .product-image-section {
@@ -36,9 +38,10 @@
 
 .product-image-section img {
     width: 100%;
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: 10px;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 16px;
+    background: var(--bg-secondary);
 }
 
 .product-info-section {
@@ -52,55 +55,59 @@
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #03a9f4;
+    color: var(--accent-blue);
     margin-bottom: 10px;
 }
 
 .pd-title {
-    font-size: 32px;
-    margin: 0 0 15px;
-    color: #fff;
+    font-size: 28px;
+    margin: 0 0 12px;
+    color: var(--text-main);
+    font-family: var(--font-main);
+    font-weight: 700;
 }
 
 .pd-price {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
     color: #22c55e;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .pd-type-badge {
     display: inline-block;
-    padding: 5px 12px;
-    background: #111;
-    border: 1px solid #333;
+    padding: 6px 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
-    font-size: 13px;
-    color: #fff;
-    margin-bottom: 25px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
     width: fit-content;
 }
 
 .pd-description {
     line-height: 1.6;
-    color: #aaa;
-    margin-bottom: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
     white-space: pre-wrap;
+    font-size: 16px;
 }
 
 .section-divider {
     border: none;
-    border-top: 1px solid #333;
-    margin: 20px 0;
+    border-top: 1px solid var(--border-color);
+    margin: 25px 0;
 }
 
 .seller-box {
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .seller-box h3 {
     margin-top: 0;
     margin-bottom: 15px;
+    color: var(--text-main);
 }
 
 .btn-contact-large {
@@ -108,20 +115,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 15px;
+    padding: 18px;
     font-size: 16px;
-    background: linear-gradient(90deg, #03a9f4, #f441a5);
-    border-radius: 8px;
+    background: var(--primary-gradient);
+    border-radius: 12px;
     border: none;
     color: white;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(3, 169, 244, 0.2);
 }
 
 .btn-contact-large:hover {
-    opacity: 0.9;
     transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(3, 169, 244, 0.3);
+    filter: brightness(1.1);
 }
 
 .hide {
@@ -131,5 +140,6 @@
 @media (max-width: 800px) {
     .product-detail-wrapper {
         flex-direction: column;
+        padding: 25px;
     }
 }
