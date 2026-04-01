@@ -1,12 +1,13 @@
 const db = require("./config/db");
 const bcrypt = require("bcrypt");
 const express = require("express");
-const authenticateToken = require("./middleware/authMiddleware");
+const { authenticateToken } = require("./middleware/authMiddleware");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const userRoutes = require("./routes/userRoutes");
 const supportRoutes = require("./routes/supportRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/support", supportRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

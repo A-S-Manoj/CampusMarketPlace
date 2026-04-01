@@ -46,7 +46,7 @@ exports.loginUser = (username, password) => {
                     return reject(new Error("Invalid username or password"));
 
                 const token = jwt.sign(
-                    { id: user.id, username: user.username },
+                    { id: user.id, username: user.username, role: user.role },
                     process.env.JWT_SECRET,
                     { expiresIn: "1h" }
                 );

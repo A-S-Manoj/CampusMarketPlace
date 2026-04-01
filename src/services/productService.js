@@ -123,10 +123,17 @@ exports.updateProduct = (id, productData, seller_id) => {
     });
 };
 
-exports.deleteProduct = (id, seller_id) => {
+exports.deleteProduct = (id, seller_id, forceDelete = false) => {
     return new Promise((resolve, reject) => {
-        const sql = "DELETE FROM products WHERE id = ? AND seller_id = ?";
-        db.query(sql, [id, seller_id], (err, result) => {
+        let sql = "DELETE FROM products WHERE id = ?";
+        let params = [id];
+
+        if (!forceDelete) {
+            sql += " AND seller_id = ?";
+            params.push(seller_id);
+        }
+
+        db.query(sql, params, (err, result) => {
             if (err) return reject(new Error("Error deleting product: " + (err ? err.message : "Unknown error")));
             if (result.affectedRows === 0) return reject(new Error("Unauthorized or product not found"));
             resolve("Product deleted successfully");

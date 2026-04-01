@@ -122,7 +122,8 @@ exports.updateProduct = async (req, res, next) => {
 
 exports.deleteProduct = async (req, res, next) => {
     try {
-        const seller_id = req.user.id;
+        const userId = req.user.id;
+        const isAdmin = req.user.role === 'admin';
         const id = req.params.id;
 
         // 1. Fetch product to get its image_url
@@ -131,13 +132,13 @@ exports.deleteProduct = async (req, res, next) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
-        // 2. Check ownership
-        if (product.seller_id !== seller_id) {
+        // 2. Check ownership OR admin status
+        if (product.seller_id !== userId && !isAdmin) {
             return res.status(403).json({ success: false, message: "Unauthorized to delete this product" });
         }
 
         // 3. Delete from database
-        const message = await productService.deleteProduct(id, seller_id);
+        const message = await productService.deleteProduct(id, userId, isAdmin);
 
         // 4. Cleanup storage AFTER DB deletion to be safe (or before if we are confident)
         if (product.image_url) {

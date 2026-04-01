@@ -4,7 +4,7 @@
     --primary-gradient: linear-gradient(90deg, #03a9f4, #f441a5);
     --accent-blue: #03a9f4;
     --accent-pink: #f441a5;
-    
+
     /* Dark Theme (Default) */
     --bg-main: #0c0c0c;
     --bg-secondary: #181818;
@@ -63,8 +63,8 @@ body {
 }
 
 body.light-mode {
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(3, 169, 244, 0.08) 0, transparent 50%), 
+    background-image:
+        radial-gradient(at 0% 0%, rgba(3, 169, 244, 0.08) 0, transparent 50%),
         radial-gradient(at 100% 100%, rgba(244, 65, 165, 0.08) 0, transparent 50%);
 }
 
@@ -75,12 +75,20 @@ main {
     color: var(--text-main);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-main);
     font-weight: 600;
 }
 
-input, button, select, textarea {
+input,
+button,
+select,
+textarea {
     font-family: var(--font-body);
 }
 
@@ -139,12 +147,25 @@ header {
 .logo {
     display: flex;
     align-items: center;
+    margin-top: 10px;
+    margin-left: 20px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo:hover {
+    transform: scale(1.05);
 }
 
 .logo img {
-    height: 75px;
+    height: 60px;
     width: auto;
     object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.2));
+    transition: filter 0.3s ease;
+}
+
+body.light-mode .logo img {
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1));
 }
 
 .nav-links {
@@ -157,18 +178,22 @@ header {
 .nav-links a {
     text-decoration: none;
     font-family: var(--font-main);
-    font-weight: 500;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     color: var(--text-secondary);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--primary-gradient);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    opacity: 0.9;
 }
 
 .nav-links a:hover {
-    transform: translateY(-1px);
-    opacity: 0.8;
+    transform: translateY(-2px) scale(1.05);
+    opacity: 1;
+    filter: brightness(1.1);
 }
 
 .logout-btn {
@@ -233,13 +258,15 @@ footer a {
     margin: 0 20px;
     color: var(--text-main);
     text-decoration: none;
-    font-size: 14px;
-    opacity: 0.7;
-    transition: all 0.3s ease;
+    font-size: 1.05rem;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-main);
 }
 
 footer a:hover {
     opacity: 1;
     color: var(--accent-blue);
+    transform: translateY(-2px);
 }
-

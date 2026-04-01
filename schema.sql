@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     year_of_study   VARCHAR(20)   DEFAULT NULL,
     course          VARCHAR(100)  DEFAULT NULL,
     profile_pic     TEXT          DEFAULT NULL,
+    role            VARCHAR(20)   DEFAULT 'user',
     created_at      TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
 );
 

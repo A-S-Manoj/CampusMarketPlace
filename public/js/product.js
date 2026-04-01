@@ -87,6 +87,34 @@ function renderProduct(product) {
     contactBtn.onclick = () => {
         window.location.href = `chat.html?userId=${product.seller_id}&productId=${product.id}`;
     };
+
+    // Admin deletion logic
+    const adminDeleteBtn = document.getElementById("adminDeleteBtn");
+    if (getUserRole() === "admin") {
+        adminDeleteBtn.classList.remove("hide");
+        adminDeleteBtn.onclick = async () => {
+            if (!confirm("Admin Action: Are you sure you want to delete this product?")) return;
+            
+            try {
+                const res = await fetch(`/api/products/${product.id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (res.ok) {
+                    showToast("Product deleted successfully!", "success");
+                    setTimeout(() => window.location.href = 'dashboard.html', 1500);
+                } else {
+                    showToast("Failed to delete product.", "error");
+                    const data = await res.json();
+                    console.error(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Error deleting product.", "error");
+            }
+        };
+    }
 }
 
 function showError(msg) {

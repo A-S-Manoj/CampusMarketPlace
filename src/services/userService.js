@@ -50,3 +50,39 @@ exports.updateUserProfile = (userId, profileData) => {
         });
     });
 };
+
+exports.searchUsers = (username) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT id, name, username, email, role, created_at FROM users WHERE LOWER(username) LIKE LOWER(?) AND role != 'admin'";
+        db.query(sql, [`%${username}%`], (err, results) => {
+            if (err) return reject(new Error("Error searching users: " + err.message));
+            resolve(results);
+        });
+    });
+};
+
+exports.deleteUser = (userId) => {
+    return new Promise((resolve, reject) => {
+        const sql = "DELETE FROM users WHERE id = ? AND role != 'admin'";
+        db.query(sql, [userId], (err, result) => {
+            if (err) return reject(new Error("Error deleting user: " + err.message));
+            if (result.affectedRows === 0) return reject(new Error("User not found or cannot delete admin"));
+            resolve("User deleted successfully");
+        });
+    });
+};
+
+exports.getStats = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT 
+                (SELECT COUNT(*) FROM users) as totalUsers,
+                (SELECT COUNT(*) FROM products) as totalProducts,
+                (SELECT COUNT(*) FROM support_messages WHERE status = 'pending') as pendingSupport
+        `;
+        db.query(sql, (err, results) => {
+            if (err) return reject(new Error("Error fetching stats: " + err.message));
+            resolve(results[0]);
+        });
+    });
+};
