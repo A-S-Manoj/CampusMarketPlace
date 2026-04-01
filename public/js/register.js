@@ -103,7 +103,7 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     if (response.ok) {
         showToast("Registration successful!", "success");
         setTimeout(() => {
-            window.location.href = "login.html";
+            window.location.href = "/login";
         }, 1500);
     } else {
         showToast(data.message || "Registration failed", "error");

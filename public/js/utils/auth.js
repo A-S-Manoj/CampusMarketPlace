@@ -34,7 +34,7 @@ function requireAdmin() {
     if (!requireAuth()) return false;
     const role = getUserRole();
     if (role !== "admin") {
-        window.location.href = "dashboard.html";
+        window.location.href = "/dashboard";
         return false;
     }
     return true;
@@ -54,7 +54,7 @@ function requireAuth() {
             sessionStorage.setItem('session_message', 'Login required.');
         }
         
-        window.location.href = "login.html";
+        window.location.href = "/login";
         return false;
     }
     return true;
@@ -64,10 +64,10 @@ function requireAuth() {
 (function() {
     const path = window.location.pathname;
     const page = path.split("/").pop();
-    const publicPages = ["login.html", "register.html", "index.html", ""];
+    const publicPages = ["login", "register", "index", "", "/", "index.html", "login.html", "register.html"];
     
     // Auto-protect all other pages
-    if (!publicPages.includes(page)) {
+    if (!publicPages.includes(page) && !publicPages.includes(path)) {
         requireAuth();
     }
     
@@ -86,7 +86,7 @@ function requireAuth() {
             if (navLinks && !document.getElementById('adminNavLink')) {
                 const adminLink = document.createElement('a');
                 adminLink.id = 'adminNavLink';
-                adminLink.href = 'admin.html';
+                adminLink.href = '/admin';
                 adminLink.innerText = 'Admin Panel';
                 adminLink.style.color = '#ef4444'; // Make it stand out
                 adminLink.style.fontWeight = 'bold';
@@ -106,7 +106,7 @@ function requireAuth() {
 function redirectIfAuthenticated() {
     const token = localStorage.getItem("token");
     if (token && !isTokenExpired(token)) {
-        window.location.href = "dashboard.html";
+        window.location.href = "/dashboard";
     } else if (token) {
         localStorage.removeItem("token");
     }
@@ -114,5 +114,5 @@ function redirectIfAuthenticated() {
 
 function logout() {
     localStorage.removeItem("token");
-    window.location.href = "login.html";
+    window.location.href = "/login";
 }

@@ -3,14 +3,15 @@
 
 <head>
     <title>CampusMarketPlace - Sharing is Caring</title>
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/index.css">
-    <script src="js/components/splashCursor.js" defer></script>
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/components/splashCursor.js" defer></script>
 </head>
 
 <body>
@@ -18,10 +19,10 @@
         <div class="logo"><a href="/"><img src="assets/images/logo.png" alt="CampusMarketPlace"></a></div>
         <div class="nav-links">
             <div class="container">
-                <button class="button" onclick="window.location.href = '/login.html';">Login</button>
+                <button class="button" onclick="window.location.href = '/login';">Login</button>
             </div>
             <div class="container">
-                <button class="button" onclick="window.location.href ='/register.html';">Register</button>
+                <button class="button" onclick="window.location.href ='/register';">Register</button>
             </div>
         </div>
     </header>
@@ -32,7 +33,7 @@
             <p>Find useful things from people you know.</p>
             <div class="cta-wrapper">
                 <div class="container">
-                    <button class="button" onclick="window.location.href = '/login.html';">Get Started</button>
+                    <button class="button" onclick="window.location.href = '/login';">Get Started</button>
                 </div>
             </div>
         </div>
@@ -44,7 +45,7 @@
         <br>
     </footer>
 </body>
-<script src="js/utils/auth.js"></script>
+<script src="/js/utils/auth.js"></script>
 <script>
     redirectIfAuthenticated();
 </script>

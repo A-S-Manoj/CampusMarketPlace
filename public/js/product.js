@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadProductDetails() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
+    const path = window.location.pathname;
+    const productId = path.split('/').pop();
 
     if (!productId) {
         showError("Invalid Product ID.");
@@ -85,7 +85,7 @@ function renderProduct(product) {
     }
 
     contactBtn.onclick = () => {
-        window.location.href = `chat.html?userId=${product.seller_id}&productId=${product.id}`;
+        window.location.href = `/chat?userId=${product.seller_id}&productId=${product.id}`;
     };
 
     // Admin deletion logic
@@ -103,7 +103,7 @@ function renderProduct(product) {
 
                 if (res.ok) {
                     showToast("Product deleted successfully!", "success");
-                    setTimeout(() => window.location.href = 'dashboard.html', 1500);
+                    setTimeout(() => window.location.href = '/dashboard', 1500);
                 } else {
                     showToast("Failed to delete product.", "error");
                     const data = await res.json();

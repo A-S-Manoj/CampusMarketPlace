@@ -59,7 +59,7 @@ async function submitProduct(e, type) {
     if (!token) {
         showToast("Please login to add a product.", "info");
         setTimeout(() => {
-            window.location.href = "login.html";
+            window.location.href = "/login";
         }, 1500);
         return;
     }
@@ -101,7 +101,7 @@ async function submitProduct(e, type) {
 
         showToast("Product added successfully!", "success");
         setTimeout(() => {
-            window.location.href = "dashboard.html";
+            window.location.href = "/dashboard";
         }, 1500);
     } catch (error) {
         console.error("Error creating product:", error);

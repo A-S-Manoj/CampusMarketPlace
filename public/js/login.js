@@ -19,7 +19,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         localStorage.setItem("token", data.token);
         showToast("Login successful!", "success");
         setTimeout(() => {
-            window.location.href = "dashboard.html";
+            window.location.href = "/dashboard";
         }, 1000);
     } else {
         showToast(data.message || "Login failed", "error");

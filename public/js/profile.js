@@ -148,7 +148,7 @@ function displayMyProducts(products) {
         container.innerHTML = `
             <div class="empty-state">
                 <p>You haven't added any products yet.</p>
-                <button class="btn btn-save" onclick="window.location.href='addProduct.html'">Add your first product</button>
+                <button class="btn btn-save" onclick="window.location.href='/add-product'">Add your first product</button>
             </div>
         `;
         return;
@@ -203,7 +203,7 @@ function displayMyProducts(products) {
 }
 
 function openProduct(id) {
-    window.location.href = `product.html?id=${id}`;
+    window.location.href = `/product/${id}`;
 }
 
 async function handleDeleteProduct(id) {

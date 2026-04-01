@@ -13,7 +13,7 @@ let activeReceiverId = null;
 async function initChat() {
     const token = localStorage.getItem("token");
     if (!token) {
-        window.location.href = "login.html";
+        window.location.href = "/login";
         return;
     }
 
@@ -25,7 +25,7 @@ async function initChat() {
 
         if (!res.ok) {
             localStorage.removeItem("token");
-            window.location.href = "login.html";
+            window.location.href = "/login";
             return;
         }
 
@@ -256,7 +256,7 @@ if (newChatUserId) {
             initChat();
         });
     } else {
-        window.location.href = "login.html";
+        window.location.href = "/login";
     }
 } else {
     initChat();

@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let currentPage = 1;
 
 function openProduct(id) {
-    window.location.href = `product.html?id=${id}`;
+    window.location.href = `/product/${id}`;
 }
 
 const searchInput = document.getElementById("searchInput");
@@ -89,7 +89,7 @@ async function filterProducts() {
 
 function contactSeller(sellerId, productId, event) {
     if (event) event.stopPropagation();
-    window.location.href = `chat.html?userId=${sellerId}&productId=${productId}`;
+    window.location.href = `/chat?userId=${sellerId}&productId=${productId}`;
 }
 
 async function fetchProducts() {
