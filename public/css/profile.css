@@ -416,3 +416,10 @@ body.light-mode {
 }
 
 .hide { display: none !important; }
+
+@media (max-width: 768px) {
+    .profile-container {
+        margin-top: 80px;
+        padding: 0 10px;
+    }
+}

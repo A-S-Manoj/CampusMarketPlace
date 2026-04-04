@@ -51,12 +51,27 @@ exports.updateUserProfile = (userId, profileData) => {
     });
 };
 
-exports.searchUsers = (username) => {
+exports.searchUsers = (username, page = 1, limit = 10) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT id, name, username, email, role, created_at FROM users WHERE LOWER(username) LIKE LOWER(?) AND role != 'admin'";
-        db.query(sql, [`%${username}%`], (err, results) => {
-            if (err) return reject(new Error("Error searching users: " + err.message));
-            resolve(results);
+        const offset = (page - 1) * limit;
+        const countSql = "SELECT COUNT(*) as total FROM users WHERE LOWER(username) LIKE LOWER(?) AND role != 'admin'";
+        
+        db.query(countSql, [`%${username}%`], (err, countResult) => {
+            if (err) return reject(new Error("Error counting users: " + err.message));
+            
+            const total = countResult[0].total;
+            const totalPages = Math.ceil(total / limit) || 1;
+            
+            const sql = "SELECT id, name, username, email, role, created_at FROM users WHERE LOWER(username) LIKE LOWER(?) AND role != 'admin' ORDER BY created_at DESC LIMIT ? OFFSET ?";
+            db.query(sql, [`%${username}%`, limit, offset], (err, results) => {
+                if (err) return reject(new Error("Error searching users: " + err.message));
+                resolve({
+                    users: results,
+                    total: total,
+                    totalPages: totalPages,
+                    currentPage: parseInt(page)
+                });
+            });
         });
     });
 };

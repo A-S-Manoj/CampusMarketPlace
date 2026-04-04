@@ -289,4 +289,8 @@ footer {
         width: calc(20vw - 2px);
         height: calc(20vw - 2px);
     }
+    section .signin {
+        width: 90%;
+        padding: 20px;
+    }
 }

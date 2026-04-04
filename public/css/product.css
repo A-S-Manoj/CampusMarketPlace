@@ -142,4 +142,8 @@
         flex-direction: column;
         padding: 25px;
     }
+    .product-container {
+        margin-top: 80px;
+        padding: 0 10px;
+    }
 }

@@ -150,3 +150,25 @@ button {
     opacity: 1;
     filter: blur(0.2em);
 }
+
+@media (max-width: 768px) {
+    .sec1 h1 {
+        font-size: 36px;
+    }
+    .sec1 p {
+        font-size: 18px;
+    }
+    header {
+        padding: 10px 15px;
+        height: auto;
+        min-height: 70px;
+    }
+    .nav-links {
+        gap: 5px;
+        margin-left: 0;
+    }
+    button {
+        font-size: 1rem;
+        padding: 0.3em 0.6em;
+    }
+}

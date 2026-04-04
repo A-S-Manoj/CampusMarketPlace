@@ -24,23 +24,44 @@ async function loadStats() {
     }
 }
 
+let currentUserPage = 1;
+
 async function searchUsers() {
+    currentUserPage = 1;
     const username = document.getElementById("userSearchInput").value;
-    loadUsers(username);
+    loadUsers(username, currentUserPage);
 }
 
-async function loadUsers(username = "") {
+async function loadUsers(username = "", page = 1) {
+    currentUserPage = page;
     try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`/api/admin/users/search?username=${username}`, {
+        const response = await fetch(`/api/admin/users/search?username=${username}&page=${page}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
         const result = await response.json();
         if (result.success) {
-            renderUsers(result.data);
+            renderUsers(result.data.users);
+            renderUserPagination(result.data.totalPages, result.data.currentPage, username);
         }
     } catch (error) {
         console.error("Error loading users:", error);
+    }
+}
+
+function renderUserPagination(totalPages, currentPage, username) {
+    const pagination = document.getElementById("userPagination");
+    if (!pagination) return;
+    pagination.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add("active");
+        btn.onclick = () => loadUsers(username, i);
+        pagination.appendChild(btn);
     }
 }
 
@@ -82,7 +103,8 @@ async function deleteUser(userId, username) {
         const result = await response.json();
         if (result.success) {
             showToast(`User ${username} has been removed.`, "success");
-            loadUsers(); 
+            const usernameSearch = document.getElementById("userSearchInput").value;
+            loadUsers(usernameSearch, currentUserPage); 
             loadStats(); 
         } else {
             showToast(result.message || "Deletion failed", "error");

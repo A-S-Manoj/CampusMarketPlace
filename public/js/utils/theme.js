@@ -27,7 +27,7 @@ function updateThemeUI() {
     // Update Logo Images
     const logos = document.querySelectorAll('.logo img');
     logos.forEach(logo => {
-        logo.src = isLight ? 'assets/images/logo_light.png' : 'assets/images/logo.png';
+        logo.src = isLight ? '/assets/images/logo_light.png' : '/assets/images/logo.png';
     });
 }
 

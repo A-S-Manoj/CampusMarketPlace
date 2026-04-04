@@ -3,11 +3,44 @@ const chatInput = document.getElementById("chatInput");
 const chatMessages = document.getElementById("chatMessages");
 const conversationList = document.getElementById("conversationList");
 const chatUserName = document.getElementById("chatUserName");
+const chatSearchBtn = document.getElementById("chatSearchBtn");
+const chatSearchContainer = document.getElementById("chatSearchContainer");
+const chatSearchInput = document.getElementById("chatSearchInput");
+
+chatSearchBtn.addEventListener("click", () => {
+    chatSearchContainer.classList.toggle("active");
+    if (chatSearchContainer.classList.contains("active")) {
+        chatSearchInput.focus();
+    } else {
+        chatSearchInput.value = "";
+        filterUsers("");
+    }
+});
+
+chatSearchInput.addEventListener("input", (e) => {
+    filterUsers(e.target.value.toLowerCase());
+});
+
+function filterUsers(query) {
+    const items = conversationList.querySelectorAll(".chat-sb-item");
+    items.forEach(item => {
+        const nameNode = item.querySelector(".chat-sb-name");
+        if (nameNode) {
+            const name = nameNode.textContent.toLowerCase();
+            if (name.includes(query)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        }
+    });
+}
 
 let socket;
 let currentUser = null;
 let currentConversationId = null;
 let activeReceiverId = null;
+const onlineUsers = new Set();
 
 // Initialize chat application
 async function initChat() {
@@ -58,6 +91,34 @@ function setupSocketListeners() {
             addMessageToDOM(message.content, type, new Date(message.created_at));
         }
     });
+
+    socket.on("user_status", (data) => {
+        if (data.online) onlineUsers.add(String(data.userId));
+        else onlineUsers.delete(String(data.userId));
+        
+        if (String(data.userId) === String(activeReceiverId)) {
+            updateCurrentChatHeaderStatus();
+        }
+    });
+
+    socket.on("online_users_list", (users) => {
+        onlineUsers.clear();
+        users.forEach(id => onlineUsers.add(String(id)));
+        updateCurrentChatHeaderStatus();
+    });
+
+    socket.emit("request_online_status");
+}
+
+function updateCurrentChatHeaderStatus() {
+    const statusDiv = document.getElementById("chatUserStatus");
+    if (!statusDiv || !activeReceiverId) return;
+
+    if (onlineUsers.has(String(activeReceiverId))) {
+        statusDiv.style.opacity = "1";
+    } else {
+        statusDiv.style.opacity = "0";
+    }
 }
 
 async function loadConversations() {
@@ -127,6 +188,7 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
     currentConversationId = conversationId;
     activeReceiverId = receiverId;
     chatUserName.textContent = receiverName;
+    updateCurrentChatHeaderStatus();
     
     // Notify global socket client about active conversation to suppress toasts
     if (window.CampusSocket) {

@@ -11,9 +11,16 @@ module.exports = (io) => {
         // User registers their socket with their user ID
         socket.on("register", (userId) => {
             if (userId) {
-                userSockets.set(userId, socket.id);
+                userSockets.set(String(userId), socket.id);
                 console.log(`User ${userId} registered with socket ${socket.id}`);
+                // Broadcast that this user is online
+                io.emit("user_status", { userId: String(userId), online: true });
             }
+        });
+
+        // Handle request for currently online users
+        socket.on("request_online_status", () => {
+            socket.emit("online_users_list", Array.from(userSockets.keys()));
         });
 
         // Handle sending a message
@@ -41,7 +48,7 @@ module.exports = (io) => {
 
                 // If receiver is connected, send it to them
                 if (receiverId) {
-                    const receiverSocketId = userSockets.get(receiverId);
+                    const receiverSocketId = userSockets.get(String(receiverId));
                     if (receiverSocketId) {
                         io.to(receiverSocketId).emit("receive_message", newMessage);
                     }
@@ -59,6 +66,8 @@ module.exports = (io) => {
                 if (sockId === socket.id) {
                     userSockets.delete(userId);
                     console.log(`Removed user ${userId} from active sockets`);
+                    // Broadcast offline status
+                    io.emit("user_status", { userId: userId, online: false });
                     break;
                 }
             }

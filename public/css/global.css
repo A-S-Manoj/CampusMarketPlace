@@ -224,6 +224,7 @@ body.light-mode .logo img {
     position: absolute;
     right: 85px;
     top: 18px;
+    z-index: 1001;
     background: var(--input-bg);
     color: var(--text-main);
     border: 1px solid var(--border-color);
@@ -269,4 +270,81 @@ footer a:hover {
     opacity: 1;
     color: var(--accent-blue);
     transform: translateY(-2px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    header {
+        height: 60px;
+        padding: 0 5px;
+        justify-content: space-between;
+    }
+
+    .logo {
+        margin-left: 5px;
+        margin-top: 5px;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    .navbar {
+        overflow-x: auto;
+    }
+
+    .nav-links {
+        margin-left: 15px;
+        gap: 15px;
+        flex: 1;
+        overflow-x: auto;
+        white-space: nowrap;
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+        align-items: center;
+    }
+
+    .nav-links::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-links a {
+        font-size: 1rem;
+    }
+
+    .theme-toggle-btn {
+        right: 50px;
+        top: 15px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .theme-toggle-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .logout-btn {
+        right: 10px;
+        top: 15px;
+        padding: 6px 8px;
+    }
+
+    .logout-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    main {
+        margin-top: 60px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Index specific padding adjustments if any */
+    .breadcrumb {
+        font-size: 12px;
+    }
 }

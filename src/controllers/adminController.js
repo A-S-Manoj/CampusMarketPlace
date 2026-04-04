@@ -3,8 +3,10 @@ const userService = require("../services/userService");
 exports.searchUsers = async (req, res, next) => {
     try {
         const username = req.query.username || "";
-        const users = await userService.searchUsers(username);
-        res.json({ success: true, data: users });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const data = await userService.searchUsers(username, page, limit);
+        res.json({ success: true, data: data });
     } catch (error) {
         next(error);
     }
