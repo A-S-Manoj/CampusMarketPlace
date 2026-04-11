@@ -27,6 +27,11 @@ app.get("/product/:id", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/product.html"));
 });
 
+// Clean Route for Public User Profile
+app.get("/user/:id", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/user-profile.html"));
+});
+
 app.get("/protected", authenticateToken, (req, res) => {
     res.json({ message: "You are authorized!", user: req.user });
 });

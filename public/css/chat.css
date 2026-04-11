@@ -147,6 +147,30 @@
     font-weight: 600;
 }
 
+.chat-sb-profile-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.chat-sb-item:hover .chat-sb-profile-link {
+    opacity: 0.6;
+}
+
+.chat-sb-profile-link:hover {
+    opacity: 1 !important;
+    color: #03a9f4;
+    background: rgba(3, 169, 244, 0.1);
+}
+
 .online-indicator {
     width: 10px;
     height: 10px;

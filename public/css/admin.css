@@ -115,7 +115,7 @@
 }
 
 .admin-table tbody tr:hover {
-    background: #222;
+    background: var(--border-color);
 }
 
 .admin-table td {

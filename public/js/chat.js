@@ -145,9 +145,22 @@ async function loadConversations() {
             return;
         }
 
+        // Determine which conversation to auto-select
+        let autoSelectIndex = 0;
+        if (targetConversationId || targetUserId) {
+            const targetIdx = conversations.findIndex(c => 
+                (targetConversationId && c.conversation_id === targetConversationId) ||
+                (targetUserId && String(c.other_user_id) === String(targetUserId))
+            );
+            if (targetIdx !== -1) autoSelectIndex = targetIdx;
+            // Clear targets after use
+            targetConversationId = null;
+            targetUserId = null;
+        }
+
         conversations.forEach((conv, index) => {
             const item = document.createElement("div");
-            item.className = `chat-sb-item ${index === 0 ? "active" : ""}`;
+            item.className = `chat-sb-item ${index === autoSelectIndex ? "active" : ""}`;
 
             // Format name with product info if available
             let displayName = conv.other_user_name;
@@ -166,6 +179,12 @@ async function loadConversations() {
                 <div class="chat-sb-info">
                     <span class="chat-sb-name">${displayName}</span>
                 </div>
+                <a href="/user/${conv.other_user_id}" class="chat-sb-profile-link" onclick="event.stopPropagation()" title="View profile">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
             `;
 
             item.addEventListener("click", () => {
@@ -176,8 +195,8 @@ async function loadConversations() {
 
             conversationList.appendChild(item);
 
-            // Load the first conversation by default
-            if (index === 0) {
+            // Auto-select the target conversation
+            if (index === autoSelectIndex) {
                 loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic, conv.other_user_verified);
             }
         });
@@ -195,7 +214,8 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
     if (isVerified) {
         headerName += ` <svg title="Student Verified" style="display:inline-block; width:20px; height:20px; vertical-align:middle; color:#0e8bf1; margin-bottom: 2px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
     }
-    chatUserName.innerHTML = headerName;
+    chatUserName.innerHTML = `<a href="/user/${receiverId}" style="color: inherit; text-decoration: none;" title="View profile">${headerName}</a>`;
+    chatUserName.style.cursor = "pointer";
     updateCurrentChatHeaderStatus();
     
     // Notify global socket client about active conversation to suppress toasts
@@ -215,7 +235,7 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
     const headerAvatar = document.querySelector(".chat-main-header .chat-sb-avatar.small");
     if (headerAvatar) {
         const picToUse = receiverPic || "/assets/images/NoPfp.jpg";
-        headerAvatar.innerHTML = `<img src="${picToUse}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+        headerAvatar.innerHTML = `<a href="/user/${receiverId}" title="View profile"><img src="${picToUse}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></a>`;
         headerAvatar.style.background = "transparent";
     }
 
@@ -301,12 +321,16 @@ function addMessageToDOM(text, type, dateObj = new Date()) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Check for deep link to start a new chat (e.g. from product page)
+// Check for deep link to start a new chat (e.g. from product page or user profile)
 const urlParams = new URLSearchParams(window.location.search);
 const newChatUserId = urlParams.get('userId');
 const newChatProductId = urlParams.get('productId');
 
+let targetConversationId = null;
+let targetUserId = null;
+
 if (newChatUserId) {
+    targetUserId = newChatUserId;
     // Create or get conversation first, then init
     const token = localStorage.getItem("token");
     if (token) {
@@ -317,7 +341,10 @@ if (newChatUserId) {
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({ userId2: newChatUserId, productId: newChatProductId })
-        }).then(() => {
+        }).then(res => res.json()).then(data => {
+            if (data.conversationId) {
+                targetConversationId = data.conversationId;
+            }
             // Remove params from URL
             window.history.replaceState({}, document.title, window.location.pathname);
             initChat();
@@ -330,4 +357,4 @@ if (newChatUserId) {
     }
 } else {
     initChat();
-}
+}

@@ -11,6 +11,8 @@ router.get("/my-products", authenticateToken, productController.getMyProducts);
 
 router.post("/", authenticateToken, upload.single("image"), productController.createProduct);
 
+router.get("/user/:userId", productController.getProductsByUserId);
+
 router.get("/:id", productController.getProductById);
 
 router.put("/:id", authenticateToken, upload.single("image"), productController.updateProduct);

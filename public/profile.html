@@ -7,7 +7,9 @@
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/profile.css">
@@ -28,7 +30,12 @@
                 <!-- Icon will be injected by theme.js -->
             </button>
             <button class="logout-btn" onclick="logout()" title="Logout">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
             </button>
         </nav>
     </header>
@@ -39,13 +46,15 @@
         </div>
         <section class="profile-section">
             <div class="profile-header">
-                <div class="profile-pic-wrapper" onclick="document.getElementById('hiddenProfilePicInput').click()" title="Click to change profile picture">
+                <div class="profile-pic-wrapper" onclick="document.getElementById('hiddenProfilePicInput').click()"
+                    title="Click to change profile picture">
                     <img id="profilePicImg" src="/assets/images/NoPfp.jpg" alt="Profile Picture">
                     <div class="profile-pic-overlay">
                         <span>Change Photo</span>
                     </div>
                 </div>
-                <input type="file" id="hiddenProfilePicInput" class="hide" accept="image/*" onchange="handleDirectPhotoUpload(this)">
+                <input type="file" id="hiddenProfilePicInput" class="hide" accept="image/*"
+                    onchange="handleDirectPhotoUpload(this)">
                 <!-- Read Mode -->
                 <div id="profileReadMode" class="profile-info">
                     <h2 id="profileName">Loading Name...</h2>
@@ -100,7 +109,7 @@
 
         <section class="my-products-section">
             <br>
-            <h2>My Products</h2>
+            <h2>Products</h2>
             <div id="myProductContainer" class="product-grid">
                 <!-- Products dynamically loaded here -->
             </div>
@@ -114,23 +123,23 @@
             <h2>Edit Product</h2>
             <form id="editProductForm" onsubmit="handleProductUpdate(event)">
                 <input type="hidden" id="editProductId">
-                
+
                 <div class="form-group">
                     <label>Product Title</label>
                     <input type="text" id="editPTitle" required placeholder="e.g. Scientific Calculator">
                 </div>
-                
+
                 <div class="form-group">
                     <label>Description</label>
                     <textarea id="editPDesc" required placeholder="Describe your item..."></textarea>
                 </div>
-                
+
                 <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label>Price (₹)</label>
                         <input type="number" id="editPPrice" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Category</label>
                         <select id="editPCat" required>
@@ -160,9 +169,10 @@
                     <label>Product Image (Optional)</label>
                     <input type="file" id="editPImage" accept="image/*">
                 </div>
-                
+
                 <br>
-                <button type="submit" class="btn btn-save" style="width: 100%; justify-content: center;">Save Changes</button>
+                <button type="submit" class="btn btn-save" style="width: 100%; justify-content: center;">Save
+                    Changes</button>
             </form>
         </div>
     </div>
@@ -181,4 +191,5 @@
     <script src="/js/utils/socketClient.js"></script>
     <script src="/js/profile.js"></script>
 </body>
+
 </html>

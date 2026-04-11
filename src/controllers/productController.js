@@ -160,3 +160,13 @@ exports.deleteProduct = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.getProductsByUserId = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const products = await productService.getProductsByUserId(userId);
+        res.json({ success: true, data: products });
+    } catch (error) {
+        next(error);
+    }
+};

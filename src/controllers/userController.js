@@ -13,6 +13,16 @@ exports.getProfile = async (req, res, next) => {
     }
 };
 
+exports.getPublicProfile = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const profile = await userService.getPublicProfile(userId);
+        res.status(200).json({ success: true, data: profile });
+    } catch (error) {
+        next(error);
+    }
+};
+
 exports.updateProfile = async (req, res, next) => {
     try {
         const userId = req.user.id;

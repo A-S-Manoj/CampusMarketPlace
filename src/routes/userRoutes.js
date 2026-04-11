@@ -6,5 +6,6 @@ const upload = require("../middleware/uploadMiddleware");
 
 router.get("/profile", authenticateToken, userController.getProfile);
 router.put("/profile", authenticateToken, upload.single("profile_pic"), userController.updateProfile);
+router.get("/profile/:id", userController.getPublicProfile);
 
 module.exports = router;

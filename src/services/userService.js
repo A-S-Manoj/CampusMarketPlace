@@ -51,6 +51,21 @@ exports.updateUserProfile = (userId, profileData) => {
     });
 };
 
+exports.getPublicProfile = (userId) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT id, name, username, student_type, hostel, year_of_study, course, profile_pic, is_verified, created_at 
+            FROM users 
+            WHERE id = ?
+        `;
+        db.query(sql, [userId], (err, results) => {
+            if (err) return reject(new Error("Error fetching public profile: " + err.message));
+            if (results.length === 0) return reject(new Error("User not found"));
+            resolve(results[0]);
+        });
+    });
+};
+
 exports.searchUsers = (username, page = 1, limit = 10) => {
     return new Promise((resolve, reject) => {
         const offset = (page - 1) * limit;
