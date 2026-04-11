@@ -111,7 +111,8 @@ function renderProduct(product) {
     if (getUserRole() === "admin") {
         adminDeleteBtn.classList.remove("hide");
         adminDeleteBtn.onclick = async () => {
-            if (!confirm("Admin Action: Are you sure you want to delete this product?")) return;
+            const confirmed = await showConfirm("Admin Action: Are you sure you want to delete this product?");
+            if (!confirmed) return;
             
             try {
                 const res = await fetch(`/api/products/${product.id}`, {

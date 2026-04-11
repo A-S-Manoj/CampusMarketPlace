@@ -59,6 +59,37 @@ module.exports = (io) => {
             }
         });
 
+        // Handle trade request notifications
+        socket.on("trade_request_send", (data) => {
+            const { sellerId, tradeRequest } = data;
+            const sellerSocketId = userSockets.get(String(sellerId));
+            if (sellerSocketId) {
+                io.to(sellerSocketId).emit("trade_request_received", tradeRequest);
+            }
+            // Also echo back to sender
+            socket.emit("trade_request_received", tradeRequest);
+        });
+
+        socket.on("trade_request_respond", (data) => {
+            const { buyerId, tradeRequest } = data;
+            const buyerSocketId = userSockets.get(String(buyerId));
+            if (buyerSocketId) {
+                io.to(buyerSocketId).emit("trade_request_updated", tradeRequest);
+            }
+            // Also echo back to seller
+            socket.emit("trade_request_updated", tradeRequest);
+        });
+        
+        socket.on("trade_request_cancel", (data) => {
+            const { sellerId, tradeRequest } = data;
+            const sellerSocketId = userSockets.get(String(sellerId));
+            if (sellerSocketId) {
+                io.to(sellerSocketId).emit("trade_request_updated", tradeRequest);
+            }
+            // Also echo back to buyer
+            socket.emit("trade_request_updated", tradeRequest);
+        });
+
         socket.on("disconnect", () => {
             console.log("Socket disconnected:", socket.id);
             // Remove the user from our tracking map

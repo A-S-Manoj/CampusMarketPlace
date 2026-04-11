@@ -348,3 +348,30 @@ footer a:hover {
         font-size: 12px;
     }
 }
+
+/* Sold/Lent Badge Styles */
+.sold-overlay-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(239, 68, 68, 0.4);
+    z-index: 10;
+}
+
+.card-sold {
+    opacity: 0.65 !important;
+    filter: grayscale(30%) !important;
+}
+
+.card-sold:hover {
+    opacity: 0.85 !important;
+    filter: grayscale(0%) !important;
+}

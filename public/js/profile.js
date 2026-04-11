@@ -171,14 +171,18 @@ function displayMyProducts(products) {
                  <span>No Image Available</span>
                </div>`;
 
-        const statusText = product.status === "available" ? "In Stock" : "Not Available";
+        const isSoldOrLent = product.status === "sold" || product.status === "lent";
+        const statusBadge = isSoldOrLent
+            ? `<div class="sold-overlay-badge">${product.status === "sold" ? "SOLD" : "LENT"}</div>`
+            : "";
 
         // Create product card but modify the bottom section for Edit / Delete instead of Contact
         const card = `
-            <div class="card" onclick="openProduct(${product.id})" style="cursor:pointer">
+            <div class="card ${isSoldOrLent ? 'card-sold' : ''}" onclick="openProduct(${product.id})" style="cursor:pointer">
                 <div class="tilt">
                     <div class="img">
                         ${imageHtml}
+                        ${statusBadge}
                     </div>
                 </div>
 
@@ -211,7 +215,8 @@ function openProduct(id) {
 }
 
 async function handleDeleteProduct(id) {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    const confirmed = await showConfirm("Are you sure you want to delete this product?");
+    if (!confirmed) return;
 
     try {
         const token = localStorage.getItem("token");

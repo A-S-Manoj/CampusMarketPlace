@@ -344,8 +344,10 @@ main section h2::after {
 
 .img {
     height: 200px;
-    overflow: hidden
+    overflow: hidden;
+    position: relative;
 }
+
 
 .img img {
     width: 100%;

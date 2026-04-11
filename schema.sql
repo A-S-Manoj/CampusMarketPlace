@@ -84,3 +84,20 @@ CREATE TABLE IF NOT EXISTS password_resets (
     created_at      TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (email) REFERENCES users(email) ON DELETE CASCADE
 );
+
+-- --------------------------------------------------------
+-- Table: trade_requests
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS trade_requests (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    conversation_id INT           NOT NULL,
+    product_id      INT           NOT NULL,
+    buyer_id        INT           NOT NULL,
+    seller_id       INT           NOT NULL,
+    status          VARCHAR(20)   DEFAULT 'pending',
+    created_at      TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id)      REFERENCES products(id)      ON DELETE CASCADE,
+    FOREIGN KEY (buyer_id)        REFERENCES users(id)          ON DELETE CASCADE,
+    FOREIGN KEY (seller_id)       REFERENCES users(id)          ON DELETE CASCADE
+);

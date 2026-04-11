@@ -53,7 +53,7 @@ exports.getAllProducts = (filters) => {
             const totalPages = Math.ceil(total / limit);
             const offset = (page - 1) * limit;
 
-            const dataSql = "SELECT products.*, users.is_verified, users.name AS seller_name, users.username AS seller_username, users.profile_pic AS seller_pic FROM products LEFT JOIN users ON products.seller_id = users.id" + whereSql + " ORDER BY products.id DESC LIMIT ? OFFSET ?";
+            const dataSql = "SELECT products.*, users.is_verified, users.name AS seller_name, users.username AS seller_username, users.profile_pic AS seller_pic FROM products LEFT JOIN users ON products.seller_id = users.id" + whereSql + " ORDER BY CASE WHEN products.status = 'available' THEN 0 ELSE 1 END, products.id DESC LIMIT ? OFFSET ?";
             db.query(dataSql, [...params, limit, offset], (err, results) => {
                 if (err) return reject(new Error("Error fetching products: " + err.message));
                 resolve({ products: results, totalPages, currentPage: page, totalProducts: total });
@@ -64,7 +64,7 @@ exports.getAllProducts = (filters) => {
 
 exports.getMyProducts = (seller_id) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT products.*, users.is_verified, users.name AS seller_name, users.username AS seller_username, users.profile_pic AS seller_pic FROM products LEFT JOIN users ON products.seller_id = users.id WHERE products.seller_id = ? ORDER BY products.id DESC";
+        const sql = "SELECT products.*, users.is_verified, users.name AS seller_name, users.username AS seller_username, users.profile_pic AS seller_pic FROM products LEFT JOIN users ON products.seller_id = users.id WHERE products.seller_id = ? ORDER BY CASE WHEN products.status = 'available' THEN 0 ELSE 1 END, products.id DESC";
         db.query(sql, [seller_id], (err, results) => {
             if (err) return reject(new Error("Error fetching user products: " + err.message));
             resolve(results);
@@ -143,7 +143,7 @@ exports.deleteProduct = (id, seller_id, forceDelete = false) => {
 
 exports.getProductsByUserId = (userId) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT products.*, users.is_verified, users.name AS seller_name, users.username AS seller_username, users.profile_pic AS seller_pic FROM products LEFT JOIN users ON products.seller_id = users.id WHERE products.seller_id = ? AND products.status = 'available' ORDER BY products.id DESC";
+        const sql = "SELECT products.*, users.is_verified, users.name AS seller_name, users.username AS seller_username, users.profile_pic AS seller_pic FROM products LEFT JOIN users ON products.seller_id = users.id WHERE products.seller_id = ? ORDER BY CASE WHEN products.status = 'available' THEN 0 ELSE 1 END, products.id DESC";
         db.query(sql, [userId], (err, results) => {
             if (err) return reject(new Error("Error fetching user products: " + err.message));
             resolve(results);

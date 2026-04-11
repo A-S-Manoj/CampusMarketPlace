@@ -15,4 +15,10 @@ router.get("/conversations", chatController.getUserConversations);
 // Get messages for a specific conversation
 router.get("/conversations/:conversationId/messages", chatController.getConversationMessages);
 
+// Trade requests
+router.post("/trade-request", chatController.createTradeRequest);
+router.put("/trade-request/:id", chatController.respondToTradeRequest);
+router.delete("/trade-request/:id", chatController.cancelTradeRequest);
+router.get("/trade-requests/:conversationId", chatController.getTradeRequests);
+
 module.exports = router;

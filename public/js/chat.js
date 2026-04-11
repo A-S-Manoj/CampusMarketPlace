@@ -6,6 +6,8 @@ const chatUserName = document.getElementById("chatUserName");
 const chatSearchBtn = document.getElementById("chatSearchBtn");
 const chatSearchContainer = document.getElementById("chatSearchContainer");
 const chatSearchInput = document.getElementById("chatSearchInput");
+const tradeDealBtn = document.getElementById("tradeDealBtn");
+const tradeDealBtnText = document.getElementById("tradeDealBtnText");
 
 chatSearchBtn.addEventListener("click", () => {
     chatSearchContainer.classList.toggle("active");
@@ -40,6 +42,7 @@ let socket;
 let currentUser = null;
 let currentConversationId = null;
 let activeReceiverId = null;
+let currentProduct = null; // { id, seller_id, type, status }
 const onlineUsers = new Set();
 
 // Initialize chat application
@@ -105,6 +108,19 @@ function setupSocketListeners() {
         onlineUsers.clear();
         users.forEach(id => onlineUsers.add(String(id)));
         updateCurrentChatHeaderStatus();
+    });
+
+    // Trade request events
+    socket.on("trade_request_received", (tradeRequest) => {
+        if (tradeRequest.conversation_id === currentConversationId) {
+            addTradeRequestToDOM(tradeRequest);
+        }
+    });
+
+    socket.on("trade_request_updated", (tradeRequest) => {
+        if (tradeRequest.conversation_id === currentConversationId) {
+            updateTradeRequestInDOM(tradeRequest);
+        }
     });
 
     socket.emit("request_online_status");
@@ -187,17 +203,35 @@ async function loadConversations() {
                 </a>
             `;
 
+            // Store product info on the item for later use
+            item.dataset.productId = conv.product_id || "";
+            item.dataset.productType = conv.product_type || "";
+            item.dataset.productStatus = conv.product_status || "";
+            item.dataset.productSellerId = conv.product_seller_id || "";
+
             item.addEventListener("click", () => {
                 document.querySelectorAll(".chat-sb-item").forEach(el => el.classList.remove("active"));
                 item.classList.add("active");
-                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic, conv.other_user_verified);
+                const productInfo = conv.product_id ? {
+                    id: conv.product_id,
+                    seller_id: conv.product_seller_id,
+                    type: conv.product_type,
+                    status: conv.product_status
+                } : null;
+                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic, conv.other_user_verified, productInfo);
             });
 
             conversationList.appendChild(item);
 
             // Auto-select the target conversation
             if (index === autoSelectIndex) {
-                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic, conv.other_user_verified);
+                const productInfo = conv.product_id ? {
+                    id: conv.product_id,
+                    seller_id: conv.product_seller_id,
+                    type: conv.product_type,
+                    status: conv.product_status
+                } : null;
+                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic, conv.other_user_verified, productInfo);
             }
         });
 
@@ -206,9 +240,10 @@ async function loadConversations() {
     }
 }
 
-async function loadMessages(conversationId, receiverId, receiverName, receiverPic, isVerified) {
+async function loadMessages(conversationId, receiverId, receiverName, receiverPic, isVerified, productInfo) {
     currentConversationId = conversationId;
     activeReceiverId = receiverId;
+    currentProduct = productInfo;
     
     let headerName = receiverName;
     if (isVerified) {
@@ -239,21 +274,57 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
         headerAvatar.style.background = "transparent";
     }
 
+    // Update trade deal button
+    updateTradeDealButton();
+
     chatMessages.innerHTML = ""; // Clear current messages
 
     const token = localStorage.getItem("token");
     try {
-        const res = await fetch(`/api/chat/conversations/${conversationId}/messages`, {
-            headers: { "Authorization": `Bearer ${token}` }
+        // Fetch messages and trade requests in parallel
+        const [messagesRes, tradeRes] = await Promise.all([
+            fetch(`/api/chat/conversations/${conversationId}/messages`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            }),
+            fetch(`/api/chat/trade-requests/${conversationId}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            })
+        ]);
+
+        if (!messagesRes.ok) throw new Error("Failed to fetch messages");
+
+        const messagesResult = await messagesRes.json();
+        const messages = messagesResult.data || messagesResult;
+
+        let tradeRequests = [];
+        if (tradeRes.ok) {
+            const tradeResult = await tradeRes.json();
+            tradeRequests = tradeResult.data || [];
+        }
+
+        // Combine messages and trade requests, sort by time
+        const allItems = [];
+
+        messages.forEach(msg => {
+            allItems.push({
+                type: 'message',
+                data: msg,
+                timestamp: new Date(msg.created_at).getTime()
+            });
         });
 
-        if (!res.ok) throw new Error("Failed to fetch messages");
+        tradeRequests.forEach(tr => {
+            allItems.push({
+                type: 'trade_request',
+                data: tr,
+                timestamp: new Date(tr.created_at).getTime()
+            });
+        });
 
-        const result = await res.json();
-        const messages = result.data || result;
+        allItems.sort((a, b) => a.timestamp - b.timestamp);
 
-        // Show welcome if no messages
-        if (messages.length === 0) {
+        // Show welcome if nothing
+        if (allItems.length === 0) {
             chatMessages.innerHTML = `
                 <div class="chat-empty-state">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -264,13 +335,242 @@ async function loadMessages(conversationId, receiverId, receiverName, receiverPi
             return;
         }
 
-        messages.forEach(msg => {
-            const type = msg.sender_id === currentUser.id ? "me" : "them";
-            addMessageToDOM(msg.content, type, new Date(msg.created_at));
+        allItems.forEach(item => {
+            if (item.type === 'message') {
+                const msgType = item.data.sender_id === currentUser.id ? "me" : "them";
+                addMessageToDOM(item.data.content, msgType, new Date(item.data.created_at));
+            } else {
+                addTradeRequestToDOM(item.data, false);
+            }
         });
 
     } catch (err) {
         console.error("Error loading messages:", err);
+    }
+}
+
+function updateTradeDealButton() {
+    if (!currentProduct || !currentUser) {
+        tradeDealBtn.style.display = "none";
+        return;
+    }
+
+    // Only show if: product exists, is available, and current user is NOT the seller
+    const isSeller = currentUser.id === currentProduct.seller_id;
+    const isAvailable = currentProduct.status === "available";
+
+    if (!isSeller && isAvailable) {
+        tradeDealBtn.style.display = "flex";
+        const actionText = currentProduct.type === "sell" ? "Request to Buy" : "Request to Rent";
+        tradeDealBtnText.textContent = actionText;
+    } else {
+        tradeDealBtn.style.display = "none";
+    }
+}
+
+// Handle trade deal button click
+tradeDealBtn.addEventListener("click", async () => {
+    if (!currentProduct || !currentConversationId) return;
+
+    const token = localStorage.getItem("token");
+    try {
+        tradeDealBtn.disabled = true;
+        tradeDealBtn.style.opacity = "0.5";
+
+        const res = await fetch("/api/chat/trade-request", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                conversationId: currentConversationId,
+                productId: currentProduct.id,
+                sellerId: currentProduct.seller_id
+            })
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            showToast(result.message || "Failed to send request.", "error");
+            tradeDealBtn.disabled = false;
+            tradeDealBtn.style.opacity = "1";
+            return;
+        }
+
+        // Emit socket event for real-time
+        socket.emit("trade_request_send", {
+            sellerId: currentProduct.seller_id,
+            tradeRequest: result.data
+        });
+
+        // Hide button after sending request
+        tradeDealBtn.style.display = "none";
+
+        showToast("Trade request sent!", "success");
+
+    } catch (err) {
+        console.error("Error sending trade request:", err);
+        showToast("Error sending request.", "error");
+        tradeDealBtn.disabled = false;
+        tradeDealBtn.style.opacity = "1";
+    }
+});
+
+function addTradeRequestToDOM(tr, scroll = true) {
+    // Remove empty state if it exists
+    const emptyState = chatMessages.querySelector(".chat-empty-state");
+    if (emptyState) emptyState.remove();
+
+    const isBuyer = currentUser.id === tr.buyer_id;
+    const isSeller = currentUser.id === tr.seller_id;
+    const actionLabel = tr.product_type === "sell" ? "buy" : "rent";
+    const doneLabel = tr.product_type === "sell" ? "Sold" : "Lent";
+
+    let statusHtml = "";
+    let actionsHtml = "";
+
+    if (tr.status === "pending") {
+        statusHtml = `<span class="tr-status tr-pending">⏳ Pending</span>`;
+        if (isSeller) {
+            actionsHtml = `
+                <div class="tr-actions">
+                    <button class="tr-accept-btn" onclick="respondTradeRequest(${tr.id}, 'accept', ${tr.buyer_id})" title="Accept">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Accept
+                    </button>
+                    <button class="tr-reject-btn" onclick="respondTradeRequest(${tr.id}, 'reject', ${tr.buyer_id})" title="Reject">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        Reject
+                    </button>
+                </div>
+            `;
+        } else if (isBuyer) {
+            actionsHtml = `
+                <div class="tr-actions">
+                    <button class="tr-cancel-btn" onclick="cancelTradeRequest(${tr.id}, ${tr.seller_id})" title="Cancel Request">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        Cancel Request
+                    </button>
+                </div>
+            `;
+        }
+    } else if (tr.status === "accepted") {
+        statusHtml = `<span class="tr-status tr-accepted">✓ ${doneLabel}!</span>`;
+    } else if (tr.status === "cancelled") {
+        statusHtml = `<span class="tr-status tr-cancelled">∅ Cancelled</span>`;
+    } else {
+        statusHtml = `<span class="tr-status tr-rejected">✗ Rejected</span>`;
+    }
+
+    const dateStr = new Date(tr.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    const card = document.createElement("div");
+    card.className = "tr-card";
+    card.id = `trade-request-${tr.id}`;
+    card.innerHTML = `
+        <div class="tr-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+        </div>
+        <div class="tr-body">
+            <div class="tr-title">
+                <strong>@${tr.buyer_username}</strong> wants to <strong>${actionLabel}</strong>
+            </div>
+            <div class="tr-product">${tr.product_title} — ₹${tr.product_price}</div>
+            <div class="tr-footer">
+                ${statusHtml}
+                <span class="tr-time">${dateStr}</span>
+            </div>
+            ${actionsHtml}
+        </div>
+    `;
+
+    chatMessages.appendChild(card);
+    if (scroll) chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function updateTradeRequestInDOM(tr) {
+    const existing = document.getElementById(`trade-request-${tr.id}`);
+    if (existing) {
+        existing.remove();
+    }
+    addTradeRequestToDOM(tr);
+
+    // If accepted, hide the deal button and update current product status
+    if (tr.status === "accepted" && currentProduct && currentProduct.id === tr.product_id) {
+        currentProduct.status = tr.product_type === "sell" ? "sold" : "lent";
+        updateTradeDealButton();
+    }
+}
+
+async function respondTradeRequest(requestId, action, buyerId) {
+    const token = localStorage.getItem("token");
+    try {
+        const res = await fetch(`/api/chat/trade-request/${requestId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ action })
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            showToast(result.message || "Failed to respond.", "error");
+            return;
+        }
+
+        // Emit socket event
+        socket.emit("trade_request_respond", {
+            buyerId: buyerId,
+            tradeRequest: result.data
+        });
+
+        const actionText = action === "accept" ? "accepted" : "rejected";
+        showToast(`Trade request ${actionText}!`, action === "accept" ? "success" : "info");
+
+    } catch (err) {
+        console.error("Error responding to trade request:", err);
+        showToast("Error responding to request.", "error");
+    }
+}
+
+async function cancelTradeRequest(requestId, sellerId) {
+    const confirmed = await showConfirm("Are you sure you want to cancel this trade request?");
+    if (!confirmed) return;
+
+    const token = localStorage.getItem("token");
+    try {
+        const res = await fetch(`/api/chat/trade-request/${requestId}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            showToast(result.message || "Failed to cancel request.", "error");
+            return;
+        }
+
+        // Emit socket event
+        socket.emit("trade_request_cancel", {
+            sellerId: sellerId,
+            tradeRequest: result.data
+        });
+
+        showToast("Trade request cancelled.", "info");
+
+    } catch (err) {
+        console.error("Error cancelling trade request:", err);
+        showToast("Error cancelling request.", "error");
     }
 }
 
@@ -357,4 +657,4 @@ if (newChatUserId) {
     }
 } else {
     initChat();
-}
+}

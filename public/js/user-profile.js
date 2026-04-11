@@ -141,12 +141,17 @@ function renderProducts(products, userName) {
                </div>`;
 
         const typeText = product.type === "sell" ? "For Buy" : "For Rent";
+        const isSoldOrLent = product.status === "sold" || product.status === "lent";
+        const statusBadge = isSoldOrLent
+            ? `<div class="sold-overlay-badge">${product.status === "sold" ? "SOLD" : "LENT"}</div>`
+            : "";
 
         const card = `
-            <div class="card" onclick="window.location.href='/product/${product.id}'" style="cursor:pointer">
+            <div class="card ${isSoldOrLent ? 'card-sold' : ''}" onclick="window.location.href='/product/${product.id}'" style="cursor:pointer">
                 <div class="tilt">
                     <div class="img">
                         ${imageHtml}
+                        ${statusBadge}
                     </div>
                 </div>
                 <div class="info">

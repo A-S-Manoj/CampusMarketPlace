@@ -90,7 +90,8 @@ function renderUsers(users) {
 }
 
 async function deleteUser(userId, username) {
-    if (!confirm(`Are you sure you want to delete user "${username}"? This will permanently remove all their listings and data.`)) {
+    const confirmed = await showConfirm(`Are you sure you want to delete user "${username}"? This will permanently remove all their listings and data.`);
+    if (!confirmed) {
         return;
     }
 
