@@ -56,3 +56,66 @@ exports.loginUser = (username, password) => {
         });
     });
 };
+
+exports.saveOTP = (email, otp) => {
+    return new Promise((resolve, reject) => {
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+
+        const deleteSql = "DELETE FROM password_resets WHERE email = ?";
+        db.query(deleteSql, [email], (err) => {
+            if (err) return reject(new Error("Database error cleaning old OTPs"));
+
+            const insertSql = "INSERT INTO password_resets (email, otp, expires_at) VALUES (?, ?, ?)";
+            db.query(insertSql, [email, otp, expiresAt], (err) => {
+                if (err) return reject(new Error("Database error saving OTP"));
+                resolve();
+            });
+        });
+    });
+};
+
+exports.verifyOTP = (email, otp) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM password_resets WHERE email = ? AND otp = ?";
+        db.query(sql, [email, otp], (err, results) => {
+            if (err) return reject(new Error("Database error verifying OTP"));
+
+            if (results.length === 0) return reject("Invalid or expired OTP");
+
+            const resetRecord = results[0];
+            if (new Date() > new Date(resetRecord.expires_at)) {
+                return reject("OTP has expired");
+            }
+            resolve(true);
+        });
+    });
+};
+
+exports.updatePassword = (email, newPassword) => {
+    return new Promise((resolve, reject) => {
+        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
+            if (err) return reject(new Error("Error hashing password"));
+
+            const sql = "UPDATE users SET password = ? WHERE email = ?";
+            db.query(sql, [hashedPassword, email], (err, result) => {
+                if (err) return reject(new Error("Database error updating password"));
+                if (result.affectedRows === 0) return reject("User not found");
+
+                db.query("DELETE FROM password_resets WHERE email = ?", [email], () => {
+                    resolve("Password updated successfully");
+                });
+            });
+        });
+    });
+};
+
+exports.findUserByEmail = (email) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM users WHERE email = ?";
+        db.query(sql, [email], (err, results) => {
+            if (err) return reject(new Error("Database error"));
+            if (results.length === 0) return reject("User not found");
+            resolve(results[0]);
+        });
+    });
+};

@@ -1,4 +1,5 @@
 const authService = require("../services/authService");
+const emailService = require("../services/emailService");
 const { isValidEmail, isValidPassword, isValidUsername, isValidString } = require("../utils/validators");
 
 exports.register = async (req, res, next) => {
@@ -57,5 +58,53 @@ exports.login = async (req, res, next) => {
     } catch (error) {
         // For security, login errors should generally return 401
         res.status(401).json({ success: false, message: typeof error === "string" ? error : "Invalid credentials" });
+    }
+};
+
+exports.forgotPassword = async (req, res, next) => {
+    const { email } = req.body;
+    if (!isValidEmail(email)) {
+        return res.status(400).json({ success: false, message: "Invalid email format." });
+    }
+    
+    try {
+        await authService.findUserByEmail(email);
+        
+        // Generate a 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        await authService.saveOTP(email, otp);
+        await emailService.sendOTP(email, otp);
+        
+        res.json({ success: true, message: "OTP sent to your email" });
+    } catch (error) {
+        if (error === "User not found") {
+            // Generalize message down the line, but for ease of use here we tell user
+            return res.status(404).json({ success: false, message: error });
+        }
+        res.status(500).json({ success: false, message: typeof error === "string" ? error : error.message });
+    }
+};
+
+exports.resetPassword = async (req, res, next) => {
+    const { email, otp, newPassword } = req.body;
+    
+    if (!email || !otp || !newPassword) {
+        return res.status(400).json({ success: false, message: "Email, OTP, and new password are required." });
+    }
+    if (!isValidPassword(newPassword)) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character." 
+        });
+    }
+
+    try {
+        await authService.verifyOTP(email, otp);
+        await authService.updatePassword(email, newPassword);
+        
+        res.json({ success: true, message: "Password reset successfully" });
+    } catch (error) {
+        res.status(400).json({ success: false, message: typeof error === "string" ? error : error.message });
     }
 };

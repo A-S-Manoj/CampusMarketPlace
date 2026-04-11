@@ -161,6 +161,86 @@ section .signin .content .form .inputBox i {
     color: #fff;
 }
 
+.validation-box {
+    position: absolute;
+    left: 105%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 250px;
+    background: #2a2a2a;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1000;
+    font-size: 0.85em;
+    color: #bbb;
+    border: 1px solid #444;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    opacity: 0;
+}
+
+.validation-box::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #2a2a2a transparent transparent;
+}
+
+.inputBox input:focus ~ .validation-box {
+    display: block;
+    opacity: 1;
+    transform: translateY(-50%) translateX(10px);
+}
+
+.requirement {
+    margin: 8px 0;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.requirement i {
+    position: static !important;
+    padding: 0 !important;
+    font-size: 1.1em !important;
+    color: #ff4b4b !important;
+    transition: 0.3s;
+}
+
+.requirement.valid {
+    color: #4df3a9;
+}
+
+.requirement.valid i {
+    color: #4df3a9 !important;
+}
+
+@media (max-width: 1000px) {
+    .validation-box {
+        left: 0;
+        top: 100%;
+        transform: none;
+        width: 100%;
+        margin-top: 10px;
+        position: relative;
+    }
+    
+    .validation-box::before {
+        display: none;
+    }
+
+    .inputBox input:focus ~ .validation-box {
+        transform: translateY(5px);
+    }
+}
+
 .signin .content .form .links {
     position: relative;
     width: 100%;
