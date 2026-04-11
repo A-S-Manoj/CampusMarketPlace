@@ -60,7 +60,7 @@ exports.getUserConversations = async (req, res, next) => {
     try {
         const query = `
             SELECT c.id AS conversation_id, c.created_at,
-                   u.id AS other_user_id, u.username AS other_user_name, u.profile_pic AS other_user_pic,
+                   u.id AS other_user_id, u.username AS other_user_name, u.profile_pic AS other_user_pic, u.is_verified AS other_user_verified,
                    p.id AS product_id, p.title AS product_name
             FROM conversations c
             JOIN users u ON (u.id = IF(c.user1_id = ?, c.user2_id, c.user1_id))

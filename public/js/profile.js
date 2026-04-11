@@ -25,7 +25,11 @@ async function loadProfile() {
 }
 
 function displayProfile(profile) {
-    document.getElementById("profileName").innerText = profile.name || "N/A";
+    let nameHtml = profile.name || "N/A";
+    if (profile.is_verified) {
+        nameHtml += ` <svg title="Student Verified" style="display:inline-block; width:24px; height:24px; vertical-align:middle; color:#0e8bf1; margin-bottom: 2px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
+    }
+    document.getElementById("profileName").innerHTML = nameHtml;
     document.getElementById("profileUsername").innerText = profile.username || "N/A";
     document.getElementById("profileEmail").innerText = profile.email || "N/A";
     document.getElementById("profileMobile").innerText = profile.mobile_number || "Not provided";

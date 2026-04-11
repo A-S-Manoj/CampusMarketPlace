@@ -21,6 +21,8 @@
     </header>
     <section>
 
+
+        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
@@ -95,8 +97,9 @@
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
         <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
-        <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
-        <div class="signin">
+        <span></span>
+
+        <div class="signin" style="margin-top: 100px;">
 
             <div class="content">
 
@@ -113,7 +116,7 @@
 
                         <div class="inputBox">
                             <input type="email" id="email" required>
-                            <i>Email</i>
+                            <i>Email (.edu.in)</i>
                         </div>
 
                         <div class="inputBox">
@@ -146,6 +149,20 @@
                             <input type="submit" value="Register">
                         </div>
 
+                    </form>
+
+                    <!-- STEP 2: Verify Email OTP -->
+                    <form id="verifyEmailForm" style="display: none;">
+                        <h3 style="color: #4df3a9; text-align: center; margin-bottom: 20px;">Verify Campus Email</h3>
+                        <p id="otpMessage" style="color: #aaa; text-align: center; margin-bottom: 20px; font-size: 0.9em;">We've sent a 6-digit OTP to your .edu.in email.</p>
+                        
+                        <div class="inputBox">
+                            <input type="text" id="otp" required>
+                            <i>Enter 6-digit OTP</i>
+                        </div>
+                        <div class="inputBox">
+                            <input type="submit" value="Complete Registration">
+                        </div>
                     </form>
 
                 </div>

@@ -9,16 +9,21 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-exports.sendOTP = async (toEmail, otp) => {
+exports.sendOTP = async (toEmail, otp, context = "reset") => {
     try {
+        const isVerification = context === "verification";
+        const subject = isVerification ? "CampusMarketPlace - Email Verification OTP" : "CampusMarketPlace - Password Reset OTP";
+        const title = isVerification ? "Email Verification" : "Password Reset Request";
+        const msg = isVerification ? "You are registering a new account. Use the following OTP to verify your email:" : "You requested to reset your password. Use the following OTP to proceed:";
+
         const mailOptions = {
             from: process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER,
             to: toEmail,
-            subject: "CampusMarketPlace - Password Reset OTP",
+            subject: subject,
             html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-                <h2 style="color: #4CAF50;">Password Reset Request</h2>
-                <p>You requested to reset your password. Use the following OTP to proceed:</p>
+                <h2 style="color: #4CAF50;">${title}</h2>
+                <p>${msg}</p>
                 <div style="background-color: #f4f4f4; padding: 15px; font-size: 24px; text-align: center; font-weight: bold; margin: 20px 0; border-radius: 5px;">
                     ${otp}
                 </div>

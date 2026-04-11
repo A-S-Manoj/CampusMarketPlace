@@ -222,7 +222,7 @@ function displayProducts(products) {
 
                     <div class="feats">
                         <span class="feat">Campus Deal</span>
-                        <span class="feat">Student Verified</span>
+                        ${product.is_verified ? '<span class="feat">Student Verified</span>' : ''}
                     </div>
 
                     <div class="bottom">

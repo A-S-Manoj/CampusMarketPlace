@@ -47,7 +47,7 @@ confirmPasswordInput.addEventListener("input", function () {
 
 const emailInput = document.getElementById("email");
 emailInput.addEventListener("input", function () {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.edu\.in$/;
     if (emailRegex.test(emailInput.value)) {
         emailInput.style.borderBottom = "2px solid #4df3a9";
     } else {
@@ -55,7 +55,11 @@ emailInput.addEventListener("input", function () {
     }
 });
 
-document.getElementById("registerForm").addEventListener("submit", async function (e) {
+let currentVerificationEmail = "";
+const registerForm = document.getElementById("registerForm");
+const verifyEmailForm = document.getElementById("verifyEmailForm");
+
+registerForm.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
@@ -100,7 +104,12 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     });
 
     const data = await response.json();
-    if (response.ok) {
+    if (data.requireOTP) {
+        showToast(data.message || "OTP sent!", "success");
+        currentVerificationEmail = document.getElementById("email").value;
+        registerForm.style.display = "none";
+        verifyEmailForm.style.display = "block";
+    } else if (response.ok) {
         showToast("Registration successful!", "success");
         setTimeout(() => {
             window.location.href = "/login";
@@ -108,5 +117,36 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     } else {
         showToast(data.message || "Registration failed", "error");
     }
+});
 
+verifyEmailForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const otp = document.getElementById("otp").value;
+    
+    if(!otp || otp.length < 6) {
+        showToast("Please enter a valid OTP", "error");
+        return;
+    }
+
+    try {
+        const response = await fetch("/verify-email", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: currentVerificationEmail, otp })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            showToast("Email verified successfully!", "success");
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 1000);
+        } else {
+            showToast(data.message || "Invalid OTP", "error");
+        }
+    } catch(err) {
+        showToast("Verification request failed", "error");
+    }
 });

@@ -3,7 +3,7 @@ const db = require("../config/db");
 exports.getUserProfile = (userId) => {
     return new Promise((resolve, reject) => {
         const sql = `
-            SELECT id, name, username, email, mobile_number, student_type, hostel, year_of_study, course, profile_pic 
+            SELECT id, name, username, email, mobile_number, student_type, hostel, year_of_study, course, profile_pic, is_verified 
             FROM users 
             WHERE id = ?
         `;

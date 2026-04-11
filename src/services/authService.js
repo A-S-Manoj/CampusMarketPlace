@@ -119,3 +119,45 @@ exports.findUserByEmail = (email) => {
         });
     });
 };
+
+exports.saveEmailVerificationOTP = (email, otp) => {
+    return new Promise((resolve, reject) => {
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); 
+        const deleteSql = "DELETE FROM email_verifications WHERE email = ?";
+        db.query(deleteSql, [email], (err) => {
+            if (err) return reject(new Error("Database error cleaning old verification OTPs"));
+            
+            const insertSql = "INSERT INTO email_verifications (email, otp, expires_at) VALUES (?, ?, ?)";
+            db.query(insertSql, [email, otp, expiresAt], (err) => {
+                if (err) return reject(new Error("Database error saving verification OTP"));
+                resolve();
+            });
+        });
+    });
+};
+
+exports.verifyEmailOTP = (email, otp) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM email_verifications WHERE email = ? AND otp = ?";
+        db.query(sql, [email, otp], (err, results) => {
+            if (err) return reject(new Error("Database error verifying OTP"));
+            if (results.length === 0) return reject("Invalid or expired OTP");
+            
+            const record = results[0];
+            if (new Date() > new Date(record.expires_at)) {
+                return reject("OTP has expired");
+            }
+            resolve(true);
+        });
+    });
+};
+
+exports.markUserVerified = (email) => {
+    return new Promise((resolve, reject) => {
+        const sql = "UPDATE users SET is_verified = TRUE WHERE email = ?";
+        db.query(sql, [email], (err, result) => {
+            if (err) return reject(new Error("Database error updating verification status"));
+            db.query("DELETE FROM email_verifications WHERE email = ?", [email], () => resolve());
+        });
+    });
+};

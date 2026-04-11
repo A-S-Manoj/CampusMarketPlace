@@ -6,40 +6,40 @@ exports.getAllProducts = (filters) => {
         let params = [];
 
         if (filters.excludeSellerId) {
-            whereSql += " AND seller_id != ?";
+            whereSql += " AND products.seller_id != ?";
             params.push(filters.excludeSellerId);
         }
         
         if (filters.category) {
-            whereSql += " AND category = ?";
+            whereSql += " AND products.category = ?";
             params.push(filters.category);
         }
 
         if (filters.search) {
             const searchTerm = `%${filters.search.toLowerCase()}%`;
-            whereSql += " AND (LOWER(title) LIKE ? OR LOWER(description) LIKE ?)";
+            whereSql += " AND (LOWER(products.title) LIKE ? OR LOWER(products.description) LIKE ?)";
             params.push(searchTerm, searchTerm);
         }
 
         if (filters.minPrice) {
-            whereSql += " AND price >= ?";
+            whereSql += " AND products.price >= ?";
             params.push(filters.minPrice);
         }
 
         if (filters.maxPrice) {
-            whereSql += " AND price <= ?";
+            whereSql += " AND products.price <= ?";
             params.push(filters.maxPrice);
         }
 
         if (filters.type) {
-            whereSql += " AND type = ?";
+            whereSql += " AND products.type = ?";
             params.push(filters.type);
         }
 
         if (filters.timeframe === "today") {
-            whereSql += " AND created_at >= CURDATE()";
+            whereSql += " AND products.created_at >= CURDATE()";
         } else if (filters.timeframe === "weekly") {
-            whereSql += " AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+            whereSql += " AND products.created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
         }
 
         // Count total matching products
@@ -53,7 +53,7 @@ exports.getAllProducts = (filters) => {
             const totalPages = Math.ceil(total / limit);
             const offset = (page - 1) * limit;
 
-            const dataSql = "SELECT * FROM products" + whereSql + " ORDER BY id DESC LIMIT ? OFFSET ?";
+            const dataSql = "SELECT products.*, users.is_verified FROM products LEFT JOIN users ON products.seller_id = users.id" + whereSql + " ORDER BY products.id DESC LIMIT ? OFFSET ?";
             db.query(dataSql, [...params, limit, offset], (err, results) => {
                 if (err) return reject(new Error("Error fetching products: " + err.message));
                 resolve({ products: results, totalPages, currentPage: page, totalProducts: total });
@@ -64,7 +64,7 @@ exports.getAllProducts = (filters) => {
 
 exports.getMyProducts = (seller_id) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM products WHERE seller_id = ? ORDER BY id DESC";
+        const sql = "SELECT products.*, users.is_verified FROM products LEFT JOIN users ON products.seller_id = users.id WHERE products.seller_id = ? ORDER BY products.id DESC";
         db.query(sql, [seller_id], (err, results) => {
             if (err) return reject(new Error("Error fetching user products: " + err.message));
             resolve(results);
@@ -93,7 +93,7 @@ exports.createProduct = (productData, seller_id) => {
 
 exports.getProductById = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM products WHERE id = ?";
+        const sql = "SELECT products.*, users.is_verified FROM products LEFT JOIN users ON products.seller_id = users.id WHERE products.id = ?";
         db.query(sql, [id], (err, results) => {
             if (err) return reject(new Error("Error fetching product: " + err.message));
             resolve(results[0]);

@@ -5,8 +5,7 @@
 
 const isValidEmail = (email) => {
     if (!email || typeof email !== "string") return false;
-    // Simple email regex for common formats
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const re = /^[^\s@]+@[^\s@]+\.edu\.in$/;
     return re.test(email);
 };
 

@@ -30,13 +30,33 @@ exports.register = async (req, res, next) => {
             password
         );
 
-        res.json({ success: true, message });
+        // Generate and send verification OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        await authService.saveEmailVerificationOTP(email, otp);
+        await emailService.sendOTP(email, otp, "verification");
+
+        res.json({ success: true, requireOTP: true, message: "OTP sent to your email", email });
     } catch (error) {
         // Customize error status for specific cases if needed
         if (error === "User already exists") {
             return res.status(409).json({ success: false, message: error });
         }
         next(error);
+    }
+};
+
+exports.verifyEmail = async (req, res, next) => {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+        return res.status(400).json({ success: false, message: "Email and OTP are required" });
+    }
+
+    try {
+        await authService.verifyEmailOTP(email, otp);
+        await authService.markUserVerified(email);
+        res.json({ success: true, message: "Email verified successfully" });
+    } catch (error) {
+        res.status(400).json({ success: false, message: typeof error === "string" ? error : error.message });
     }
 };
 

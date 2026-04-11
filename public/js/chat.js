@@ -151,6 +151,9 @@ async function loadConversations() {
 
             // Format name with product info if available
             let displayName = conv.other_user_name;
+            if (conv.other_user_verified) {
+                displayName += ` <svg title="Student Verified" style="display:inline-block; width:16px; height:16px; vertical-align:middle; color:#0e8bf1; margin-bottom: 2px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
+            }
             if (conv.product_name) {
                 displayName += ` <span style='font-size: 11px; color:#aaa'>(${conv.product_name})</span>`;
             }
@@ -168,14 +171,14 @@ async function loadConversations() {
             item.addEventListener("click", () => {
                 document.querySelectorAll(".chat-sb-item").forEach(el => el.classList.remove("active"));
                 item.classList.add("active");
-                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic);
+                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic, conv.other_user_verified);
             });
 
             conversationList.appendChild(item);
 
             // Load the first conversation by default
             if (index === 0) {
-                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic);
+                loadMessages(conv.conversation_id, conv.other_user_id, conv.other_user_name, conv.other_user_pic, conv.other_user_verified);
             }
         });
 
@@ -184,10 +187,15 @@ async function loadConversations() {
     }
 }
 
-async function loadMessages(conversationId, receiverId, receiverName, receiverPic) {
+async function loadMessages(conversationId, receiverId, receiverName, receiverPic, isVerified) {
     currentConversationId = conversationId;
     activeReceiverId = receiverId;
-    chatUserName.textContent = receiverName;
+    
+    let headerName = receiverName;
+    if (isVerified) {
+        headerName += ` <svg title="Student Verified" style="display:inline-block; width:20px; height:20px; vertical-align:middle; color:#0e8bf1; margin-bottom: 2px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
+    }
+    chatUserName.innerHTML = headerName;
     updateCurrentChatHeaderStatus();
     
     // Notify global socket client about active conversation to suppress toasts
