@@ -4,10 +4,20 @@
     let activeConversationId = null;
 
     function initSocket() {
-        const userId = typeof getUserId === 'function' ? getUserId() : null;
-        if (!userId) return;
+        // Need to identify the current user to register
+        const token = localStorage.getItem("token");
+        if (!token) return;
 
-        // io() is expected to be available globally from /socket.io/socket.io.js
+        // Simple helper to get userId from JWT if needed, or if stored
+        let userId = null;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            userId = payload.id;
+        } catch (e) {
+            console.error("Error parsing token for socket registration");
+            return;
+        }
+
         if (typeof io !== 'undefined') {
             socket = io();
             
@@ -18,18 +28,40 @@
 
             socket.on('receive_message', (message) => {
                 // If we are on the chat page and this is the active conversation, 
-                // we don't show a toast (chat.js will handle the UI update).
-                if (window.location.pathname.includes('chat.html') && 
-                    activeConversationId === message.conversation_id) {
+                // we don't show a toast/notification (chat.js handles UI).
+                if (window.location.pathname.includes('chat') && 
+                    activeConversationId == message.conversation_id) {
                     return;
                 }
 
-                // Show toast for new message
-                if (typeof showToast === 'function') {
-                    showToast(`New message from ${message.sender_name || 'someone'}: "${truncateContent(message.content)}"`, 'info');
+                if (typeof window.addLiveNotification === 'function') {
+                    window.addLiveNotification({
+                        message: `New message from User ${message.sender_id}: "${truncateContent(message.content)}"`,
+                        type: 'message',
+                        link: `/chat?id=${message.sender_id}`
+                    });
                 }
-                
-                // Play a subtle sound if desired (optional)
+            });
+
+            socket.on('trade_request_received', (tradeRequest) => {
+                if (typeof window.addLiveNotification === 'function') {
+                    window.addLiveNotification({
+                        message: `Someone sent you a trade request for "${tradeRequest.product_title}"`,
+                        type: 'trade',
+                        link: `/profile`
+                    });
+                }
+            });
+
+            socket.on('trade_request_updated', (tradeRequest) => {
+                if (typeof window.addLiveNotification === 'function') {
+                    const statusMsg = tradeRequest.status === 'accepted' ? 'accepted' : 'rejected';
+                    window.addLiveNotification({
+                        message: `Your trade request for "${tradeRequest.product_title}" was ${statusMsg}`,
+                        type: 'trade',
+                        link: `/profile`
+                    });
+                }
             });
 
             socket.on('message_error', (data) => {

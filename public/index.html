@@ -29,13 +29,58 @@
     </header>
 
     <section class="sec1">
-        <div>
-            <h1>Welcome to CampusMarketPlace</h1>
-            <p>Find useful things from people you know.</p>
-            <div class="cta-wrapper">
-                <div class="container">
-                    <button class="button" onclick="window.location.href = '/login';">Get Started</button>
+        <div class="slider-wrapper">
+            <button class="slider-btn prev-btn" aria-label="Previous Slide">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+
+            <div class="slider-container">
+                <!-- Slide 1: Welcome -->
+                <div class="slide active">
+                    <h1>Welcome to CampusMarketPlace</h1>
+                    <p>Find useful things from people you know.</p>
+                    <div class="cta-wrapper">
+                        <div class="container">
+                            <button class="button" onclick="window.location.href = '/login';">Get Started</button>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Slide 2: About -->
+                <div class="slide">
+                    <h1>Bridging the Gap on Campus</h1>
+                    <p>A student-driven platform to simplify buying, selling, and lending. Fostering sustainability and community through reuse.</p>
+                    <div class="cta-wrapper">
+                        <div class="container">
+                            <button class="button" onclick="window.location.href = '/login';">Join Community</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Features -->
+                <div class="slide">
+                    <h1>Simple & Secure Trading</h1>
+                    <p>Secure buy, sell, and lend trades with verified users in your university. Built for students, by students.</p>
+                    <div class="cta-wrapper">
+                        <div class="container">
+                            <button class="button" onclick="window.location.href = '/login';">Start Trading</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="slider-btn next-btn" aria-label="Next Slide">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <div class="slider-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
             </div>
         </div>
     </section>
@@ -47,6 +92,7 @@
     </footer>
 </body>
 <script src="/js/utils/auth.js"></script>
+<script src="/js/utils/indexSlider.js"></script>
 <script>
     redirectIfAuthenticated();
 </script>

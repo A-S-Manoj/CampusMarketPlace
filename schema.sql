@@ -101,3 +101,17 @@ CREATE TABLE IF NOT EXISTS trade_requests (
     FOREIGN KEY (buyer_id)        REFERENCES users(id)          ON DELETE CASCADE,
     FOREIGN KEY (seller_id)       REFERENCES users(id)          ON DELETE CASCADE
 );
+
+-- --------------------------------------------------------
+-- Table: notifications
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS notifications (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    user_id         INT           NOT NULL,
+    message         TEXT          NOT NULL,
+    type            VARCHAR(50)   DEFAULT 'info',
+    link            VARCHAR(255)  DEFAULT NULL,
+    is_read         BOOLEAN       DEFAULT FALSE,
+    created_at      TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

@@ -1,4 +1,6 @@
 const db = require("./db");
+const notificationService = require("../services/notificationService");
+
 
 module.exports = (io) => {
     // We can store connected users mapped to their socket IDs if needed
@@ -47,12 +49,18 @@ module.exports = (io) => {
                 socket.emit("receive_message", newMessage);
 
                 // If receiver is connected, send it to them
-                if (receiverId) {
                     const receiverSocketId = userSockets.get(String(receiverId));
                     if (receiverSocketId) {
                         io.to(receiverSocketId).emit("receive_message", newMessage);
+                    } else {
+                        // User is offline, store notification
+                        await notificationService.createNotification(
+                            receiverId,
+                            `New message from User ${senderId}`,
+                            "message",
+                            `/chat?id=${senderId}`
+                        );
                     }
-                }
             } catch (err) {
                 console.error("Error saving/sending message:", err);
                 socket.emit("message_error", { error: "Failed to send message" });
@@ -60,23 +68,38 @@ module.exports = (io) => {
         });
 
         // Handle trade request notifications
-        socket.on("trade_request_send", (data) => {
-            const { sellerId, tradeRequest } = data;
+        socket.on("trade_request_send", async (data) => {
+            const { sellerId, tradeRequest, buyerName } = data;
             const sellerSocketId = userSockets.get(String(sellerId));
+            
+            // Store notification in DB regardless of online status for persistent history
+            await notificationService.createNotification(
+                sellerId,
+                `${buyerName || 'Someone'} sent you a trade request for "${tradeRequest.product_title}"`,
+                "trade",
+                `/profile`
+            );
+
             if (sellerSocketId) {
                 io.to(sellerSocketId).emit("trade_request_received", tradeRequest);
             }
-            // Also echo back to sender
             socket.emit("trade_request_received", tradeRequest);
         });
 
-        socket.on("trade_request_respond", (data) => {
-            const { buyerId, tradeRequest } = data;
+        socket.on("trade_request_respond", async (data) => {
+            const { buyerId, tradeRequest, sellerName } = data;
             const buyerSocketId = userSockets.get(String(buyerId));
+
+            await notificationService.createNotification(
+                buyerId,
+                `${sellerName || 'The seller'} ${tradeRequest.status} your trade request for "${tradeRequest.product_title}"`,
+                "trade",
+                `/profile`
+            );
+
             if (buyerSocketId) {
                 io.to(buyerSocketId).emit("trade_request_updated", tradeRequest);
             }
-            // Also echo back to seller
             socket.emit("trade_request_updated", tradeRequest);
         });
         
